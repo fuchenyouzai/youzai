@@ -8,44 +8,39 @@
 </head>
 <body>
 
-<header>
-  <h1>文章页面</h1>
-  <nav>
-    <a href="index.html">首页</a>
-    <a href="articles.html">文章</a>
-    <a href="images.html">图片</a>
-    <a href="videos.html">视频</a>
-    <a href="music.html">音乐</a>
-    <a href="live.html">直播</a>
-    <a href="about.html">关于我</a>
-  </nav>
-</header>
+<header><h1>文章页面</h1></header>
+
+<nav>
+  <a href="index.html">首页</a>
+  <a href="articles.html">文章</a>
+  <a href="images.html">图片</a>
+  <a href="videos.html">视频</a>
+  <a href="live.html">直播</a>
+  <a href="music.html">音乐</a>
+  <a href="about.html">关于我</a>
+  <a href="#" id="install-btn">安装至设备</a>
+</nav>
 
 <main>
 <article>
-<h2>旅行日志</h2>
-<p>上周我去了黄石公园，记录了许多美丽的风景和趣事。</p>
-<img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="旅行图片">
-<div class="article-video">
-  <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="黄石公园短视频" allowfullscreen></iframe>
-</div>
-<p>音乐配乐：</p>
+<h2>我的第一篇博文</h2>
+<p>这是示例文章内容，支持图片、音频和视频嵌入。</p>
+<img src="https://via.placeholder.com/600x400?text=文章图片" alt="文章图片">
 <audio controls preload="auto" controlsList="nodownload">
   <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-您的浏览器不支持音频播放。
+  您的浏览器不支持音频播放。
 </audio>
+<div class="article-video">
+  <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="文章视频" allowfullscreen></iframe>
+</div>
 </article>
+
 </main>
 
-<footer>
-&copy; 2025 悠哉的博客
-</footer>
-
-<div id="install-btn" class="float-btn">安装至设备</div>
-<button id="sound-toggle-btn" class="float-btn">🔊 打开声音</button>
-<button id="mode-toggle-btn" class="float-btn">🌙 夜晚模式</button>
-<div id="back-to-top">⬆️ 返回顶部</div>
-
+<footer>&copy; 2025 悠哉的博客</footer>
+<div id="back-top-btn-fixed">⬆ 返回顶部</div>
+<button id="sound-toggle-btn" class="floating-btn">🔊 打开声音</button>
+<button id="mode-toggle-btn" class="floating-btn">🌙 夜晚模式</button>
 <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script src="script.js"></script>

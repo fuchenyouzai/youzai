@@ -5,40 +5,50 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>悠哉的博客 - 首页</title>
 <link rel="stylesheet" href="style.css">
+<!-- iOS 安装支持 -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="悠哉的博客">
+<link rel="apple-touch-icon" href="icon-192.png">
 </head>
 <body>
 
 <header>
-  <h1>悠哉的博客</h1>
-  <p>分享我的生活与兴趣</p>
-  <nav>
-    <a href="index.html">首页</a>
-    <a href="articles.html">文章</a>
-    <a href="images.html">图片</a>
-    <a href="videos.html">视频</a>
-    <a href="music.html">音乐</a>
-    <a href="live.html">直播</a>
-    <a href="about.html">关于我</a>
-  </nav>
+<h1>悠哉的博客</h1>
+<p>分享我的生活与兴趣</p>
 </header>
+
+<nav>
+  <a href="index.html">首页</a>
+  <a href="articles.html">文章</a>
+  <a href="images.html">图片</a>
+  <a href="videos.html">视频</a>
+  <a href="live.html">直播</a>
+  <a href="music.html">音乐</a>
+  <a href="about.html">关于我</a>
+  <a href="#" id="install-btn">安装至设备</a>
+</nav>
 
 <main>
 <article>
-<h2>欢迎来到悠哉的博客</h2>
-<p>这里是我的个人博客首页，您可以通过上方导航访问文章、图片、视频、音乐和直播内容。</p>
-<img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="首页示例图">
+<h2>欢迎来到我的博客</h2>
+<p>这里分享生活、旅行、技术、音乐和各种有趣的内容。</p>
+<img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="示例图片">
 </article>
+
+<article>
+<h2>视频推荐</h2>
+<div id="youtube-feed"></div>
+</article>
+
 </main>
 
 <footer>
 &copy; 2025 悠哉的博客
 </footer>
 
-<!-- 悬浮按钮 -->
-<div id="install-btn" class="float-btn">安装至设备</div>
-<button id="sound-toggle-btn" class="float-btn">🔊 打开声音</button>
-<button id="mode-toggle-btn" class="float-btn">🌙 夜晚模式</button>
-<div id="back-to-top">⬆️ 返回顶部</div>
+<div id="back-top-btn-fixed">⬆ 返回顶部</div>
+<button id="sound-toggle-btn" class="floating-btn">🔊 打开声音</button>
+<button id="mode-toggle-btn" class="floating-btn">🌙 夜晚模式</button>
 
 <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 <script src="https://www.youtube.com/iframe_api"></script>

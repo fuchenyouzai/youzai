@@ -8,43 +8,38 @@
 </head>
 <body>
 
-<header>
-  <h1>直播页面</h1>
-  <nav>
-    <a href="index.html">首页</a>
-    <a href="articles.html">文章</a>
-    <a href="images.html">图片</a>
-    <a href="videos.html">视频</a>
-    <a href="music.html">音乐</a>
-    <a href="live.html">直播</a>
-    <a href="about.html">关于我</a>
-  </nav>
-</header>
+<header><h1>直播页面</h1></header>
+
+<nav>
+  <a href="index.html">首页</a>
+  <a href="articles.html">文章</a>
+  <a href="images.html">图片</a>
+  <a href="videos.html">视频</a>
+  <a href="live.html">直播</a>
+  <a href="music.html">音乐</a>
+  <a href="about.html">关于我</a>
+  <a href="#" id="install-btn">安装至设备</a>
+</nav>
 
 <main>
 <article>
-<h2>YouTube 直播</h2>
+<h2>凤凰卫视 YouTube 直播</h2>
 <div class="video-container">
-  <div id="live-player">加载中...</div>
+<div id="live-player">加载中...</div>
 </div>
+<button id="sound-toggle-btn" class="floating-btn">🔊 打开声音</button>
+</article>
 
-<h2>Facebook 直播</h2>
+<article>
+<h2>Facebook 直播示例</h2>
 <div class="video-container">
-  <iframe src="https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/facebook/videos/10153231379946729/" 
-          allowfullscreen></iframe>
+<iframe src="https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/facebook/videos/10153231379946729/" allowfullscreen></iframe>
 </div>
 </article>
 </main>
 
-<footer>
-&copy; 2025 悠哉的博客
-</footer>
-
-<div id="install-btn" class="float-btn">安装至设备</div>
-<button id="sound-toggle-btn" class="float-btn">🔊 打开声音</button>
-<button id="mode-toggle-btn" class="float-btn">🌙 夜晚模式</button>
-<div id="back-to-top">⬆️ 返回顶部</div>
-
+<footer>&copy; 2025 悠哉的博客</footer>
+<div id="back-top-btn-fixed">⬆ 返回顶部</div>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script src="script.js"></script>
 </body>

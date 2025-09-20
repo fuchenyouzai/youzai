@@ -8,44 +8,50 @@
 </head>
 <body>
 
-<header>
-  <h1>关于我</h1>
-  <nav>
-    <a href="index.html">首页</a>
-    <a href="articles.html">文章</a>
-    <a href="images.html">图片</a>
-    <a href="videos.html">视频</a>
-    <a href="music.html">音乐</a>
-    <a href="live.html">直播</a>
-    <a href="about.html">关于我</a>
-  </nav>
-</header>
+<header><h1>关于我</h1></header>
+
+<nav>
+  <a href="index.html">首页</a>
+  <a href="articles.html">文章</a>
+  <a href="images.html">图片</a>
+  <a href="videos.html">视频</a>
+  <a href="live.html">直播</a>
+  <a href="music.html">音乐</a>
+  <a href="about.html">关于我</a>
+  <a href="#" id="install-btn">安装至设备</a>
+</nav>
 
 <main>
 <article>
-<h2>个人简介</h2>
-<p>我是悠哉，这里记录我的生活、兴趣和创作内容。</p>
-
 <h2>留言板（Gitalk）</h2>
 <div id="gitalk-container"></div>
+<a href="https://github.com/fuchenyouzai/youzai/issues" target="_blank" class="admin-btn">查看 GitHub 后台评论</a>
+</article>
 
+<article>
 <h2>留言板（Disqus 中文）</h2>
 <div id="disqus_thread"></div>
+<script>
+(function() { 
+    var d=document, s=d.createElement('script');
+    s.src='https://youzaibolg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp',+new Date());
+    (d.head||d.body).appendChild(s);
+})();
+</script>
+</article>
 
-<h2>联系方式</h2>
+<article>
+<h2>联系我</h2>
 <a href="https://t.me/fuchenyouzaibot" target="_blank" class="telegram-btn">联系 Telegram</a>
 </article>
+
 </main>
 
-<footer>
-&copy; 2025 悠哉的博客
-</footer>
-
-<div id="install-btn" class="float-btn">安装至设备</div>
-<button id="sound-toggle-btn" class="float-btn">🔊 打开声音</button>
-<button id="mode-toggle-btn" class="float-btn">🌙 夜晚模式</button>
-<div id="back-to-top">⬆️ 返回顶部</div>
-
+<footer>&copy; 2025 悠哉的博客</footer>
+<div id="back-top-btn-fixed">⬆ 返回顶部</div>
+<button id="sound-toggle-btn" class="floating-btn">🔊 打开声音</button>
+<button id="mode-toggle-btn" class="floating-btn">🌙 夜晚模式</button>
 <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 <script src="script.js"></script>
 </body>

@@ -8,42 +8,33 @@
 </head>
 <body>
 
-<header>
-  <h1>视频页面</h1>
-  <nav>
-    <a href="index.html">首页</a>
-    <a href="articles.html">文章</a>
-    <a href="images.html">图片</a>
-    <a href="videos.html">视频</a>
-    <a href="music.html">音乐</a>
-    <a href="live.html">直播</a>
-    <a href="about.html">关于我</a>
-  </nav>
-</header>
+<header><h1>视频页面</h1></header>
+
+<nav>
+  <a href="index.html">首页</a>
+  <a href="articles.html">文章</a>
+  <a href="images.html">图片</a>
+  <a href="videos.html">视频</a>
+  <a href="live.html">直播</a>
+  <a href="music.html">音乐</a>
+  <a href="about.html">关于我</a>
+  <a href="#" id="install-btn">安装至设备</a>
+</nav>
 
 <main>
 <article>
-<h2>精彩视频推荐</h2>
-<p>这是一个示例视频介绍文字，可添加文字描述和说明。</p>
+<h2>视频示例</h2>
+<p>这里可以添加文字介绍每个视频内容</p>
 <div class="video-container">
-  <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="示例视频" allowfullscreen></iframe>
-</div>
-<div class="video-container">
-  <iframe src="https://www.youtube.com/embed/oHg5SJYRHA0" title="示例视频2" allowfullscreen></iframe>
+<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="示例视频" allowfullscreen></iframe>
 </div>
 </article>
 </main>
 
-<footer>
-&copy; 2025 悠哉的博客
-</footer>
-
-<div id="install-btn" class="float-btn">安装至设备</div>
-<button id="sound-toggle-btn" class="float-btn">🔊 打开声音</button>
-<button id="mode-toggle-btn" class="float-btn">🌙 夜晚模式</button>
-<div id="back-to-top">⬆️ 返回顶部</div>
-
-<script src="https://www.youtube.com/iframe_api"></script>
+<footer>&copy; 2025 悠哉的博客</footer>
+<div id="back-top-btn-fixed">⬆ 返回顶部</div>
+<button id="sound-toggle-btn" class="floating-btn">🔊 打开声音</button>
+<button id="mode-toggle-btn" class="floating-btn">🌙 夜晚模式</button>
 <script src="script.js"></script>
 </body>
 </html>
