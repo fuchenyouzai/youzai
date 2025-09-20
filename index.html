@@ -15,7 +15,6 @@
 <link rel="apple-touch-icon" href="/icon-192.png">
 
 <style>
-/* ===== 颜色变量 & 白天/夜晚模式 ===== */
 :root {
   --bg-color: #f4f4f4;
   --text-color: #333;
@@ -39,7 +38,7 @@ body {
   font-family: "Helvetica Neue", Arial, sans-serif;
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
+  overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -54,7 +53,6 @@ main {
   max-width: 800px;
   margin: 20px auto;
   padding: 0 10px;
-  overflow-x: hidden;
 }
 
 article {
@@ -64,11 +62,12 @@ article {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  overflow: hidden;
 }
 
 h2 { color: #4CAF50; }
 img { max-width:100%; border-radius:5px; }
-iframe { width:100%; border:none; border-radius:5px; pointer-events:auto; }
+iframe { width:100%; border:none; border-radius:5px; }
 audio { width:100%; margin-top:10px; }
 
 footer {
@@ -96,13 +95,15 @@ a.telegram-btn:hover { background-color:#006699; }
 a.admin-btn { background-color:#e53935; }
 a.admin-btn:hover { background-color:#b71c1c; }
 
-/* ===== 视频容器 & 手势滚动 ===== */
+/* 视频容器可滚动 & 手势缩放 */
 .video-container, .article-video {
   position: relative;
   width: 100%;
   padding-bottom: 56.25%;
   height: 0;
-  overflow: hidden;
+  overflow: auto; 
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y pinch-zoom;
   border-radius: 5px;
   margin: 10px 0;
 }
@@ -113,17 +114,14 @@ a.admin-btn:hover { background-color:#b71c1c; }
   width:100%;
   height:100%;
   border:none;
-  pointer-events:auto;
-  touch-action: pan-y pinch-zoom;
+  pointer-events: auto;
 }
-
-/* Disqus */
 #disqus_thread {
   touch-action: pan-y pinch-zoom;
   -webkit-overflow-scrolling: touch;
 }
 
-/* ===== 右上角安装按钮 ===== */
+/* 右上角安装按钮 */
 #install-btn {
   position: fixed;
   top: 60px;
@@ -148,7 +146,7 @@ a.admin-btn:hover { background-color:#b71c1c; }
   #install-btn { top: 100px; width: 120px; height: 36px; font-size: 13px; }
 }
 
-/* ===== 右下角按钮 ===== */
+/* 右下角按钮 */
 #sound-toggle-btn, #mode-toggle-btn {
   position: fixed;
   bottom: 20px;
@@ -174,7 +172,6 @@ a.admin-btn:hover { background-color:#b71c1c; }
 </header>
 
 <main>
-<!-- 文章内容 -->
 <article>
 <h2>我的第一篇博文</h2>
 <p>这是我的第一篇博客文章，欢迎大家来到我的博客！我会分享生活、技术、旅行和各种有趣的内容。</p>
@@ -245,7 +242,8 @@ a.admin-btn:hover { background-color:#b71c1c; }
 <article>
 <h2>联系方式</h2>
 <a href="https://t.me/fuchenyouzaibot" target="_blank" class="telegram-btn">联系 Telegram</a>
-<a href="t://123456789" target="_blank" class="telegram-btn" style="background-color:#12B7F5;">联系 QQ</a>
+<a href="tencent://message/?uin=123456789&Menu=yes" class="telegram-btn" style="background-color:#12B7F5; margin-left:10px;">联系 QQ</a>
+<p style="margin-top:5px; font-size:12px; color:gray;">* 如果浏览器不支持直接打开 QQ，可复制 QQ 号：123456789</p>
 </article>
 
 </main>
@@ -254,10 +252,7 @@ a.admin-btn:hover { background-color:#b71c1c; }
 &copy; 2025 悠哉的博客
 </footer>
 
-<!-- 安装按钮 -->
 <div id="install-btn">安装至设备</div>
-
-<!-- 右下角按钮 -->
 <button id="sound-toggle-btn">🔊 打开声音</button>
 <button id="mode-toggle-btn">🌙 夜晚模式</button>
 
@@ -267,7 +262,7 @@ a.admin-btn:hover { background-color:#b71c1c; }
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // 夜晚模式持久化
+  // 夜间模式持久化
   const modeBtn = document.getElementById('mode-toggle-btn');
   if (localStorage.getItem("dark-mode") === "true") {
     document.body.classList.add("dark-mode");
@@ -282,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
     modeBtn.textContent = isDark ? "☀️ 白天模式" : "🌙 夜晚模式";
   });
 
-  // Gitalk 初始化
+  // Gitalk
   const gitalk = new Gitalk({
     clientID: 'Ov23lijfU0G3M7jiMFAW',
     clientSecret: '47120dd1810d3a2a9aa0033211f5ee73ef29baa3',
@@ -295,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   gitalk.render('gitalk-container');
 
-  // 图片点击放大 + 手势支持
+  // 图片点击放大
   document.querySelectorAll('.gallery img').forEach(img => {
     img.addEventListener('click', () => {
       const overlay = document.createElement('div');
@@ -318,10 +313,8 @@ document.addEventListener('DOMContentLoaded', () => {
       imgEl.style.maxWidth = '90%';
       imgEl.style.maxHeight = '90%';
       imgEl.style.borderRadius = '5px';
-      imgEl.style.userSelect = 'none';
-      imgEl.style.touchAction = 'pan-x pan-y pinch-zoom';
-
       overlay.appendChild(imgEl);
+
       overlay.addEventListener('click', () => document.body.removeChild(overlay));
       document.body.appendChild(overlay);
     });
@@ -385,7 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // PWA 注册 Service Worker
+  // PWA Service Worker
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js')
       .then(reg => console.log('Service Worker 注册成功:', reg.scope))
@@ -420,7 +413,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 }); // DOMContentLoaded
 
-// ===== 凤凰卫视直播 =====
+// 凤凰卫视直播
 let livePlayer;
 let soundOn = false;
 function onYouTubeIframeAPIReady() {
@@ -445,7 +438,17 @@ soundBtn.addEventListener('click', () => {
     soundOn = true;
   }
 });
+
+/* ===== 结束位置 =====
+   - 这里是完整的右下角声音按钮控制代码
+   - 凤凰卫视直播已接入
+   - 夜间模式、QQ/Telegram 联系方式、PWA 安装按钮、Gitalk & Disqus 评论、
+     图片点击放大、YouTube 视频墙均已整合
+   - Edge / Chrome 滑动问题已修复（overflow + touch-action 设置）
+*/
 </script>
 
 </body>
 </html>
+
+
