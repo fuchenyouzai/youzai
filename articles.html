@@ -4,102 +4,50 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>文章 - 悠哉的博客</title>
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#4CAF50">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="悠哉的博客">
-<link rel="apple-touch-icon" href="/icon-192.png">
-<style>
-:root {
-  --bg-color:#f4f4f4;--text-color:#333;--header-bg:#4CAF50;--footer-bg:#333;--footer-text:#fff;--article-bg:#fff;
-}
-body.dark-mode {--bg-color:#1e1e1e;--text-color:#f4f4f4;--header-bg:#333;--footer-bg:#222;--footer-text:#f4f4f4;--article-bg:#2a2a2a;}
-body{background:var(--bg-color);color:var(--text-color);font-family:"Helvetica Neue",Arial,sans-serif;margin:0;padding:0;}
-header{background:var(--header-bg);color:white;padding:20px;text-align:center;}
-nav{text-align:center;margin:10px 0;}
-nav a{display:inline-block;margin:0 5px;padding:8px 12px;background:#0088cc;color:white;border-radius:5px;text-decoration:none;font-weight:bold;}
-nav a:hover{background:#006699;}
-main{max-width:800px;margin:20px auto;padding:0 10px;}
-article{background:var(--article-bg);color:var(--text-color);margin-bottom:20px;padding:20px;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
-h2{color:#4CAF50;}
-img{max-width:100%;border-radius:5px;}
-iframe{width:100%;border:none;border-radius:5px;}
-audio{width:100%;margin-top:10px;}
-footer{text-align:center;padding:15px;background:var(--footer-bg);color:var(--footer-text);margin-top:20px;}
-#install-btn,#sound-toggle-btn,#mode-toggle-btn,#back-top-btn{position:fixed;z-index:1000;padding:12px 18px;border-radius:6px;font-weight:bold;cursor:pointer;box-shadow:0 4px 8px rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;text-align:center;}
-#install-btn{bottom:20px;left:20px;background:#4CAF50;color:white;width:120px;height:40px;font-size:14px;}
-#install-btn:hover{background:#388E3C;transform:scale(1.05);}
-#sound-toggle-btn{bottom:20px;right:20px;background:#e53935;color:white;}
-#sound-toggle-btn:hover{background:#b71c1c;transform:scale(1.05);}
-#mode-toggle-btn{bottom:70px;right:20px;background:#555;color:white;font-size:14px;}
-#mode-toggle-btn:hover{background:#333;transform:scale(1.05);}
-#back-top-btn{bottom:120px;right:20px;background:#0088cc;color:white;font-size:14px;display:none;}
-#back-top-btn:hover{background:#006699;transform:scale(1.05);}
-.gallery{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
-.gallery img{width:30%;border-radius:5px;cursor:pointer;transition:transform 0.3s;}
-.gallery img:hover{transform:scale(1.05);}
-.video-container,.article-video{position:relative;width:100%;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:5px;margin:10px 0;}
-.video-container iframe,.article-video iframe,.video-container #live-player{position:absolute;top:0;left:0;width:100%;height:100%;border:none;}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 <header>
-<h1>文章 - 悠哉的博客</h1>
-<nav>
-<a href="index.html">首页</a>
-<a href="articles.html">文章</a>
-<a href="images.html">图片</a>
-<a href="videos.html">视频</a>
-<a href="live.html">直播</a>
-<a href="music.html">音乐</a>
-<a href="contact.html">关于我</a>
-</nav>
+  <h1>文章页面</h1>
+  <nav>
+    <a href="index.html">首页</a>
+    <a href="articles.html">文章</a>
+    <a href="images.html">图片</a>
+    <a href="videos.html">视频</a>
+    <a href="music.html">音乐</a>
+    <a href="live.html">直播</a>
+    <a href="about.html">关于我</a>
+  </nav>
 </header>
 
 <main>
 <article>
-<h2>我的旅行故事</h2>
-<p>上周去了黄石公园，拍摄了很多美景照片和视频，这里记录我的旅行日志。</p>
-<img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="旅行照片">
+<h2>旅行日志</h2>
+<p>上周我去了黄石公园，记录了许多美丽的风景和趣事。</p>
+<img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="旅行图片">
 <div class="article-video">
-<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="旅行视频" allowfullscreen></iframe>
+  <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="黄石公园短视频" allowfullscreen></iframe>
 </div>
-<p>音乐分享：</p>
+<p>音乐配乐：</p>
 <audio controls preload="auto" controlsList="nodownload">
-<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
 您的浏览器不支持音频播放。
 </audio>
 </article>
-
-<article>
-<h2>技术分享</h2>
-<p>分享一个小型前端项目的实现过程，文章可包含代码示例、图片和视频演示。</p>
-<img src="https://via.placeholder.com/400x200?text=代码截图" alt="代码截图">
-<div class="article-video">
-<iframe src="https://www.youtube.com/embed/oHg5SJYRHA0" title="技术演示视频" allowfullscreen></iframe>
-</div>
-</article>
 </main>
 
-<footer>&copy; 2025 悠哉的博客</footer>
+<footer>
+&copy; 2025 悠哉的博客
+</footer>
 
-<div id="install-btn">安装至设备</div>
-<button id="sound-toggle-btn">🔊 打开声音</button>
-<button id="mode-toggle-btn">🌙 夜晚模式</button>
-<button id="back-top-btn">⬆ 返回顶部</button>
+<div id="install-btn" class="float-btn">安装至设备</div>
+<button id="sound-toggle-btn" class="float-btn">🔊 打开声音</button>
+<button id="mode-toggle-btn" class="float-btn">🌙 夜晚模式</button>
+<div id="back-to-top">⬆️ 返回顶部</div>
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
 <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 <script src="https://www.youtube.com/iframe_api"></script>
-<script>
-document.addEventListener('DOMContentLoaded',()=>{
-  let livePlayer,soundOn=false;
-  window.onYouTubeIframeAPIReady=function(){livePlayer=new YT.Player('live-player',{videoId:'fN9uYWCjQaw',playerVars:{autoplay:1,mute:1,controls:1,modestbranding:1},events:{'onReady':(e)=>{e.target.mute();}}});};
-  const installBtn=document.getElementById('install-btn');let deferredPrompt;const isEdge=/Edg/i.test(navigator.userAgent);const isChrome=/Chrome/i.test(navigator.userAgent)&&!isEdge;if(isChrome){window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;});}installBtn.addEventListener('click',async()=>{if(isChrome){if(!deferredPrompt){alert("PWA 安装条件未满足，或已安装");return;}deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;}else if(isEdge){alert("请通过浏览器菜单（右上角 ⋮）选择“添加到桌面”来安装到手机或电脑桌面。");}else{alert("当前浏览器不支持自动安装，请使用 Chrome 或 Edge 浏览器。");}});
-  const soundBtn=document.getElementById('sound-toggle-btn');soundBtn.addEventListener('click',()=>{if(!livePlayer)return;if(soundOn){livePlayer.mute();soundBtn.textContent='🔊 打开声音';soundOn=false;}else{livePlayer.unMute();soundBtn.textContent='🔇 关闭声音';soundOn=true;}});
-  const modeBtn=document.getElementById('mode-toggle-btn');modeBtn.addEventListener('click',()=>{document.body.classList.toggle('dark-mode');if(document.body.classList.contains('dark-mode')){modeBtn.textContent="☀️ 白天模式";}else{modeBtn.textContent="🌙 夜晚模式";}});
-  const backTopBtn=document.getElementById('back-top-btn');window.addEventListener('scroll',()=>{if(window.scrollY>300){backTopBtn.style.display='flex';}else{backTopBtn.style.display='none';}});backTopBtn.addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smooth'});});
-});
-</script>
+<script src="script.js"></script>
 </body>
 </html>

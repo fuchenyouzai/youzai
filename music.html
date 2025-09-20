@@ -4,90 +4,48 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>音乐 - 悠哉的博客</title>
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#4CAF50">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="悠哉的博客">
-<link rel="apple-touch-icon" href="/icon-192.png">
-<style>
-:root {--bg-color:#f4f4f4;--text-color:#333;--header-bg:#4CAF50;--footer-bg:#333;--footer-text:#fff;--article-bg:#fff;}
-body.dark-mode {--bg-color:#1e1e1e;--text-color:#f4f4f4;--header-bg:#333;--footer-bg:#222;--footer-text:#f4f4f4;--article-bg:#2a2a2a;}
-body{background:var(--bg-color);color:var(--text-color);font-family:"Helvetica Neue",Arial,sans-serif;margin:0;padding:0;}
-header{background:var(--header-bg);color:white;padding:20px;text-align:center;}
-nav{text-align:center;margin:10px 0;}
-nav a{display:inline-block;margin:0 5px;padding:8px 12px;background:#0088cc;color:white;border-radius:5px;text-decoration:none;font-weight:bold;}
-nav a:hover{background:#006699;}
-main{max-width:800px;margin:20px auto;padding:0 10px;}
-article{background:var(--article-bg);margin-bottom:20px;padding:20px;border-radius:10px;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
-audio{width:100%;margin-top:10px;}
-#install-btn,#sound-toggle-btn,#mode-toggle-btn,#back-top-btn{position:fixed;z-index:1000;padding:12px 18px;border-radius:6px;font-weight:bold;cursor:pointer;box-shadow:0 4px 8px rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;text-align:center;}
-#install-btn{bottom:20px;left:20px;background:#4CAF50;color:white;width:120px;height:40px;font-size:14px;}
-#install-btn:hover{background:#388E3C;transform:scale(1.05);}
-#sound-toggle-btn{bottom:20px;right:20px;background:#e53935;color:white;}
-#sound-toggle-btn:hover{background:#b71c1c;transform:scale(1.05);}
-#mode-toggle-btn{bottom:70px;right:20px;background:#555;color:white;font-size:14px;}
-#mode-toggle-btn:hover{background:#333;transform:scale(1.05);}
-#back-top-btn{bottom:120px;right:20px;background:#0088cc;color:white;font-size:14px;display:none;}
-#back-top-btn:hover{background:#006699;transform:scale(1.05);}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 <header>
-<h1>音乐 - 悠哉的博客</h1>
-<nav>
-<a href="index.html">首页</a>
-<a href="articles.html">文章</a>
-<a href="images.html">图片</a>
-<a href="videos.html">视频</a>
-<a href="live.html">直播</a>
-<a href="music.html">音乐</a>
-<a href="contact.html">关于我</a>
-</nav>
+  <h1>音乐页面</h1>
+  <nav>
+    <a href="index.html">首页</a>
+    <a href="articles.html">文章</a>
+    <a href="images.html">图片</a>
+    <a href="videos.html">视频</a>
+    <a href="music.html">音乐</a>
+    <a href="live.html">直播</a>
+    <a href="about.html">关于我</a>
+  </nav>
 </header>
+
 <main>
 <article>
-<h2>示例音乐 1</h2>
-<p>这是我分享的一首背景音乐示例。</p>
+<h2>音乐分享</h2>
+<p>这里是示例音乐介绍文字，可以搭配视频或文字说明。</p>
 <audio controls preload="auto" controlsList="nodownload">
   <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
 您的浏览器不支持音频播放。
 </audio>
-</article>
 
-<article>
-<h2>示例音乐 2</h2>
-<p>另一首示例音乐，适合放松。</p>
-<audio controls preload="auto" controlsList="nodownload">
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
-您的浏览器不支持音频播放。
-</audio>
+<div class="article-video">
+  <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="音乐视频" allowfullscreen></iframe>
+</div>
 </article>
 </main>
-<footer>&copy; 2025 悠哉的博客</footer>
-<div id="install-btn">安装至设备</div>
-<button id="sound-toggle-btn">🔊 打开声音</button>
-<button id="mode-toggle-btn">🌙 夜晚模式</button>
-<button id="back-top-btn">⬆ 返回顶部</button>
-<script>
-document.addEventListener('DOMContentLoaded',()=>{
-  const installBtn=document.getElementById('install-btn');
-  let deferredPrompt;
-  const isEdge=/Edg/i.test(navigator.userAgent);
-  const isChrome=/Chrome/i.test(navigator.userAgent)&&!isEdge;
-  if(isChrome){window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;});}
-  installBtn.addEventListener('click',async()=>{
-    if(isChrome){if(!deferredPrompt){alert("PWA 安装条件未满足，或已安装");return;}deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;}
-    else if(isEdge){alert("请通过浏览器菜单（右上角 ⋮）选择“添加到桌面”来安装到手机或电脑桌面。");}
-    else{alert("当前浏览器不支持自动安装，请使用 Chrome 或 Edge 浏览器。");}
-  });
-  const soundBtn=document.getElementById('sound-toggle-btn');let soundOn=false;
-  soundBtn.addEventListener('click',()=>{soundOn=!soundOn; soundBtn.textContent=soundOn?'🔇 关闭声音':'🔊 打开声音';});
-  const modeBtn=document.getElementById('mode-toggle-btn');
-  modeBtn.addEventListener('click',()=>{document.body.classList.toggle('dark-mode'); modeBtn.textContent=document.body.classList.contains('dark-mode')?"☀️ 白天模式":"🌙 夜晚模式";});
-  const backTopBtn=document.getElementById('back-top-btn');
-  window.addEventListener('scroll',()=>{backTopBtn.style.display=(window.scrollY>300)?'flex':'none';});
-  backTopBtn.addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smooth'});});
-});
-</script>
+
+<footer>
+&copy; 2025 悠哉的博客
+</footer>
+
+<div id="install-btn" class="float-btn">安装至设备</div>
+<button id="sound-toggle-btn" class="float-btn">🔊 打开声音</button>
+<button id="mode-toggle-btn" class="float-btn">🌙 夜晚模式</button>
+<div id="back-to-top">⬆️ 返回顶部</div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script src="script.js"></script>
 </body>
 </html>
