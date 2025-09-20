@@ -1,3 +1,7 @@
+明白，我把你的完整 HTML 文件里 QQ 跳转按钮修复，并保持原有样式、功能和所有整合功能（夜间模式、PWA 安装、Gitalk/Disqus、图片放大、YouTube 视频墙、凤凰直播、右下角声音按钮等）。
+
+下面是完整最终版：
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -242,8 +246,11 @@ a.admin-btn:hover { background-color:#b71c1c; }
 <article>
 <h2>联系方式</h2>
 <a href="https://t.me/fuchenyouzaibot" target="_blank" class="telegram-btn">联系 Telegram</a>
-<a href="tencent://message/?uin=123456789&Menu=yes" class="telegram-btn" style="background-color:#12B7F5; margin-left:10px;">联系 QQ</a>
-<p style="margin-top:5px; font-size:12px; color:gray;">* 如果浏览器不支持直接打开 QQ，可复制 QQ 号：123456789</p>
+<a href="#" class="telegram-btn" style="background-color:#12B7F5; margin-left:10px;"
+   onclick="openQQ('629225370')">联系 QQ</a>
+<p style="margin-top:5px; font-size:12px; color:gray;" id="qq-tip">
+* 如果浏览器不支持直接打开 QQ，可复制 QQ 号：629225370
+</p>
 </article>
 
 </main>
@@ -378,7 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // PWA Service Worker
+// PWA Service Worker
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js')
       .then(reg => console.log('Service Worker 注册成功:', reg.scope))
@@ -439,16 +446,22 @@ soundBtn.addEventListener('click', () => {
   }
 });
 
-/* ===== 结束位置 =====
-   - 这里是完整的右下角声音按钮控制代码
-   - 凤凰卫视直播已接入
-   - 夜间模式、QQ/Telegram 联系方式、PWA 安装按钮、Gitalk & Disqus 评论、
-     图片点击放大、YouTube 视频墙均已整合
-   - Edge / Chrome 滑动问题已修复（overflow + touch-action 设置）
-*/
+// QQ 跳转功能
+function openQQ(qqNumber) {
+  const ua = navigator.userAgent.toLowerCase();
+  const qqUrl = `mqqwpa://im/chat?chat_type=wpa&uin=${qqNumber}&version=1&src_type=web`;
+  if (/mobile/.test(ua)) {
+    // 移动设备尝试跳转 QQ App
+    window.location.href = qqUrl;
+    setTimeout(() => {
+      alert(`请手动复制 QQ 号：${qqNumber} 或使用 QQ App 打开`);
+    }, 1500);
+  } else {
+    // PC 浏览器显示提示
+    alert(`请使用 QQ 客户端联系，QQ 号：${qqNumber}`);
+  }
+}
 </script>
 
 </body>
 </html>
-
-
