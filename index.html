@@ -225,10 +225,10 @@ a.admin-btn:hover { background-color: #b71c1c; }
 </article>
 
 <article>
-  <h2>音乐视频</h2>
-  <p>一人一首成名曲</p>
+  <h2>旅行见闻</h2>
+  <p>上周我去了黄石公园，那里风景非常美，我拍了很多照片和视频想要分享给大家。</p>
   <div class="article-video">
-    <iframe src="https://www.youtube.com/live/TCGeG2o7XE8?si=nQ71C2r6XDLcMKqw" title="音乐视频" allowfullscreen></iframe>
+    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="黄石公园短视频" allowfullscreen></iframe>
   </div>
 </article>
 
@@ -240,11 +240,6 @@ a.admin-btn:hover { background-color: #b71c1c; }
     您的浏览器不支持音频播放。
   </audio>
 </article>
-
-
-
-
-
 
 <article>
 <h2>悠哉(„• ֊ •„)੭</h2>
@@ -297,6 +292,7 @@ a.admin-btn:hover { background-color: #b71c1c; }
 <!-- Gitalk -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
 <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
 <!-- YouTube IFrame API -->
 <script src="https://www.youtube.com/iframe_api"></script>
 
@@ -339,9 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const videos = [
     {id: "ZB9QSD_SWmM", type: "shorts", title: "最新 Shorts 视频"},
     {id: "ZB9QSD_SWmM", type: "shorts", title: "示例视频 1"},
-    {id: "ZB9QSD_SWmM", type: "video", title: "示例视频 2"}
-    {id: "ZB9QSD_SWmM", type: "video", title: "示例视频 2"}
-    {id: "ZB9QSD_SWmM", type: "video", title: "示例视频 2"}
+    {id: "ZB9QSD_SWmM", type: "video", title: "示例视频 2"}    
   ];
   const feedContainer = document.getElementById("youtube-feed");
   if (feedContainer) {
