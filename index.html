@@ -183,46 +183,6 @@ a.admin-btn:hover { background-color: #b71c1c; }
   font-size: 14px;
 }
 #mode-toggle-btn:hover { background-color: #333; transform: scale(1.05); }
-
-/* 添加放大查看图片时的样式 */
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-
-.overlay img {
-  max-width: 90%;
-  max-height: 90%;
-  border-radius: 5px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.8);
-}
-
-.overlay .prev, .overlay .next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(0,0,0,0.5);
-  color: white;
-  padding: 10px;
-  cursor: pointer;
-  border-radius: 50%;
-}
-
-.overlay .prev {
-  left: 20px;
-}
-
-.overlay .next {
-  right: 20px;
-}
 </style>
 </head>
 <body>
@@ -235,7 +195,7 @@ a.admin-btn:hover { background-color: #b71c1c; }
 <main>
 <article>
 <h2>悠哉的Telegram</h2>
-<a href="https://t.me/fuchenyouzaibot" target="_blank" class="telegram-btn">联系 Telegram</a>
+<a href="https://t.me/fuchenyouzai" target="_blank" class="telegram-btn">联系 Telegram</a>
 </article>	
 	
 <!-- 文章内容 -->
@@ -283,14 +243,8 @@ a.admin-btn:hover { background-color: #b71c1c; }
 <article>
 <h2>悠哉(„• ֊ •„)੭</h2>
 <div class="gallery">
-  <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="图片1">
-  <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t4.jpg" alt="图片3">
-  <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="图片1">
-  <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t4.jpg" alt="图片3">
-  <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="图片1">
-  <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t4.jpg" alt="图片3">
-  <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="图片1">
-  <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t4.jpg" alt="图片3">
+<img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="图片1">
+<img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t4.jpg" alt="图片3">
 </div>
 </article>
 
@@ -303,7 +257,7 @@ a.admin-btn:hover { background-color: #b71c1c; }
 <article>
 <h2>悠哉的留言板（Gitalk）</h2>
 <div id="gitalk-container"></div>
-<a href="https://github.com/fuchenyouzaibot/youzai/issues" target="_blank" class="admin-btn" style="margin-top:10px;">查看 GitHub 后台评论</a>
+<a href="https://github.com/fuchenyouzai/youzai/issues" target="_blank" class="admin-btn" style="margin-top:10px;">查看 GitHub 后台评论</a>
 </article>
 
 <article>
@@ -337,7 +291,6 @@ a.admin-btn:hover { background-color: #b71c1c; }
 <!-- Gitalk -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
 <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
-
 <!-- YouTube IFrame API -->
 <script src="https://www.youtube.com/iframe_api"></script>
 
@@ -348,8 +301,8 @@ document.addEventListener('DOMContentLoaded', () => {
     clientID: 'Ov23lijfU0G3M7jiMFAW',
     clientSecret: '47120dd1810d3a2a9aa0033211f5ee73ef29baa3',
     repo: 'youzai',
-    owner: 'fuchenyouzaibot',
-    admin: ['fuchenyouzaibot'],
+    owner: 'fuchenyouzai',
+    admin: ['fuchenyouzai'],
     id: location.pathname,
     distractionFreeMode: false,
     language: 'zh-CN'
@@ -357,40 +310,20 @@ document.addEventListener('DOMContentLoaded', () => {
   gitalk.render('gitalk-container');
 
   // 图片点击放大
-  document.querySelectorAll('.gallery img').forEach((img, index, images) => {
+  document.querySelectorAll('.gallery img').forEach(img => {
     img.addEventListener('click', () => {
       const overlay = document.createElement('div');
-      overlay.classList.add('overlay');
-      const overlayImg = document.createElement('img');
-      overlayImg.src = img.src;
-      overlay.appendChild(overlayImg);
-      
-      const prevButton = document.createElement('div');
-      prevButton.classList.add('prev');
-      prevButton.innerHTML = '‹';
-      const nextButton = document.createElement('div');
-      nextButton.classList.add('next');
-      nextButton.innerHTML = '›';
-      
-      overlay.appendChild(prevButton);
-      overlay.appendChild(nextButton);
-      
-      let currentIndex = index;
-      
-      const showImage = (index) => {
-        overlayImg.src = images[index].src;
-      };
-      
-      prevButton.addEventListener('click', () => {
-        currentIndex = (currentIndex - 1 + images.length) % images.length;
-        showImage(currentIndex);
-      });
-      
-      nextButton.addEventListener('click', () => {
-        currentIndex = (currentIndex + 1) % images.length;
-        showImage(currentIndex);
-      });
-
+      overlay.style.position = 'fixed';
+      overlay.style.top = 0;
+      overlay.style.left = 0;
+      overlay.style.width = '100%';
+      overlay.style.height = '100%';
+      overlay.style.background = 'rgba(0,0,0,0.8)';
+      overlay.style.display = 'flex';
+      overlay.style.justifyContent = 'center';
+      overlay.style.alignItems = 'center';
+      overlay.style.cursor = 'pointer';
+      overlay.innerHTML = `<img src="${img.src}" style="max-width:90%; max-height:90%; border-radius:5px;">`;
       overlay.addEventListener('click', () => document.body.removeChild(overlay));
       document.body.appendChild(overlay);
     });
@@ -542,3 +475,7 @@ modeBtn.addEventListener('click', () => {
 
 </body>
 </html>
+    
+    
+
+
