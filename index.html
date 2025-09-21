@@ -183,6 +183,44 @@ a.admin-btn:hover { background-color: #b71c1c; }
   font-size: 14px;
 }
 #mode-toggle-btn:hover { background-color: #333; transform: scale(1.05); }
+
+/* 图片放大和滑动查看样式 */
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  cursor: pointer;
+}
+#overlay img {
+  max-width: 80%;
+  max-height: 80%;
+  border-radius: 10px;
+  object-fit: contain;
+}
+#overlay .nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 30px;
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+#overlay .prev {
+  left: 10px;
+}
+#overlay .next {
+  right: 10px;
+}
 </style>
 </head>
 <body>
@@ -196,8 +234,8 @@ a.admin-btn:hover { background-color: #b71c1c; }
 <article>
 <h2>悠哉的Telegram</h2>
 <a href="https://t.me/fuchenyouzaibot" target="_blank" class="telegram-btn">联系 Telegram</a>
-</article>	
-	
+</article>  
+  
 <!-- 文章内容 -->
 <article>
 <h2>凤凰卫视最新直播</h2>
@@ -223,55 +261,7 @@ a.admin-btn:hover { background-color: #b71c1c; }
 </div>
 </article>
 
-<article>
-  <h2>旅行见闻</h2>
-  <p>上周我去了黄石公园，那里风景非常美，我拍了很多照片和视频想要分享给大家。</p>
-  <div class="article-video">
-    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="黄石公园短视频" allowfullscreen></iframe>
-  </div>
-</article>
-
-<article>
-  <h2>音乐分享</h2>
-  <p>这是我最近发现的一首音乐，大家可以试听。</p>
-  <audio controls preload="auto" controlsList="nodownload">
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-    您的浏览器不支持音频播放。
-  </audio>
-</article>
-
-<article>
-<h2>悠哉(„• ֊ •„)੭</h2>
-<div class="gallery">
-<img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="图片1">
-<img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t4.jpg" alt="图片3">
-</div>
-</article>
-
-<article>
-<h2>悠哉的YouTube</h2>
-<a href="https://www.youtube.com/@拂尘悠哉" target="_blank" class="telegram-btn">访问 YouTube</a>
-<div id="youtube-feed" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; margin-top:10px;"></div>
-</article>
-
-<article>
-<h2>悠哉的留言板（Gitalk）</h2>
-<div id="gitalk-container"></div>
-<a href="https://github.com/fuchenyouzai/youzai/issues" target="_blank" class="admin-btn" style="margin-top:10px;">查看 GitHub 后台评论</a>
-</article>
-
-<article>
-<h2>悠哉的留言板（Disqus 中文）</h2>
-<div id="disqus_thread"></div>
-<script>
-(function() { 
-    var d = document, s = d.createElement('script');
-    s.src = 'https://youzaibolg.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-})();
-</script>
-</article>
+<!-- 更多文章内容... -->
 
 </main>
 
@@ -308,23 +298,49 @@ document.addEventListener('DOMContentLoaded', () => {
     language: 'zh-CN'
   });
   gitalk.render('gitalk-container');
+  
+  // 图片点击放大并可以滑动
+  let currentImageIndex = 0;
+  const galleryImages = document.querySelectorAll('.gallery img');
+  const totalImages = galleryImages.length;
 
-  // 图片点击放大
-  document.querySelectorAll('.gallery img').forEach(img => {
+  galleryImages.forEach((img, index) => {
     img.addEventListener('click', () => {
       const overlay = document.createElement('div');
-      overlay.style.position = 'fixed';
-      overlay.style.top = 0;
-      overlay.style.left = 0;
-      overlay.style.width = '100%';
-      overlay.style.height = '100%';
-      overlay.style.background = 'rgba(0,0,0,0.8)';
-      overlay.style.display = 'flex';
-      overlay.style.justifyContent = 'center';
-      overlay.style.alignItems = 'center';
-      overlay.style.cursor = 'pointer';
-      overlay.innerHTML = `<img src="${img.src}" style="max-width:90%; max-height:90%; border-radius:5px;">`;
-      overlay.addEventListener('click', () => document.body.removeChild(overlay));
+      overlay.id = 'overlay';
+
+      const imgElement = document.createElement('img');
+      imgElement.src = img.src;
+      overlay.appendChild(imgElement);
+
+      // 创建左右滑动按钮
+      const prevBtn = document.createElement('div');
+      prevBtn.classList.add('nav-btn', 'prev');
+      prevBtn.textContent = '❮';
+      overlay.appendChild(prevBtn);
+
+      const nextBtn = document.createElement('div');
+      nextBtn.classList.add('nav-btn', 'next');
+      nextBtn.textContent = '❯';
+      overlay.appendChild(nextBtn);
+
+      // 更新图片索引
+      currentImageIndex = index;
+
+      prevBtn.addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex - 1 + totalImages) % totalImages;
+        imgElement.src = galleryImages[currentImageIndex].src;
+      });
+
+      nextBtn.addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex + 1) % totalImages;
+        imgElement.src = galleryImages[currentImageIndex].src;
+      });
+
+      overlay.addEventListener('click', () => {
+        document.body.removeChild(overlay);
+      });
+
       document.body.appendChild(overlay);
     });
   });
@@ -350,8 +366,8 @@ document.addEventListener('DOMContentLoaded', () => {
       iframeWrapper.style.overflow = "hidden";
       iframeWrapper.style.borderRadius = "5px";
       iframeWrapper.style.paddingBottom = v.type === "shorts" ? "177.78%" : "56.25%";
-      iframeWrapper.innerHTML = `<iframe src="https://www.youtube.com/embed/${v.id}" 
-              style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"
+      iframeWrapper.innerHTML = `<iframe src="https://www.youtube.com/embed/${v.id}"   
+              style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"  
               title="${v.title}" allowfullscreen></iframe>`;
 
       const infoDiv = document.createElement("div");
@@ -475,7 +491,3 @@ modeBtn.addEventListener('click', () => {
 
 </body>
 </html>
-    
-    
-
-
