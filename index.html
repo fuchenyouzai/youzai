@@ -6,16 +6,36 @@
   <title>悠哉的博客</title>
 
   <!-- PWA Manifest -->
-  <link rel="manifest" href="data:application/json;base64,eyJub...ZGJK7E="> <!-- Base64编码的manifest.json -->
-  <meta name="theme-color" content="#4CAF50">
+  <script type="application/json" id="manifest-json">
+    {
+      "name": "悠哉的博客",
+      "short_name": "悠哉博客",
+      "start_url": "./index.html",
+      "display": "standalone",
+      "background_color": "#f4f4f4",
+      "theme_color": "#4CAF50",
+      "orientation": "portrait",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        },
+        {
+          "src": "icon-512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ]
+    }
+  </script>
 
   <!-- iOS 安装支持 -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="悠哉的博客">
   <link rel="apple-touch-icon" href="/icon-192.png">
-
+  
   <style>
-    /* 样式保持不变 */
     /* ===== 颜色变量 & 白天/夜晚模式 ===== */
     :root {
       --bg-color: #f4f4f4;
@@ -64,11 +84,6 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
-    h2 { color: #4CAF50; }
-    img { max-width: 100%; border-radius: 5px; cursor: pointer; transition: transform 0.3s; }
-    iframe { width: 100%; border: none; border-radius: 5px; }
-    audio { width: 100%; margin-top: 10px; }
-
     footer {
       text-align: center;
       padding: 15px;
@@ -77,54 +92,7 @@
       margin-top: 20px;
     }
 
-    .gallery {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-    }
-    .gallery img {
-      width: 48%;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: transform 0.3s;
-    }
-    .gallery img:hover {
-      transform: scale(1.05);
-    }
-
-    a.telegram-btn, a.admin-btn {
-      display: inline-block;
-      padding: 10px 15px;
-      color: white;
-      border-radius: 5px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    a.telegram-btn { background-color: #0088cc; }
-    a.telegram-btn:hover { background-color: #006699; }
-    a.admin-btn { background-color: #e53935; }
-    a.admin-btn:hover { background-color: #b71c1c; }
-
-    .video-container, .article-video {
-      position: relative;
-      width: 100%;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-      border-radius: 5px;
-      margin: 10px 0;
-    }
-    .video-container iframe, .article-video iframe, .video-container #live-player {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    /* ===== 右上角安装按钮（圆形） ===== */
+    /* ===== Button styles ===== */
     #install-btn {
       position: fixed;
       top: 160px;
@@ -140,26 +108,17 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      text-align: center;
       cursor: pointer;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
       transition: background-color 0.3s, transform 0.2s;
     }
+
     #install-btn:hover {
       background-color: #388E3C;
       transform: scale(1.05);
     }
-    @media screen and (max-width: 768px) {
-      #install-btn {
-        top: 100px;
-        width: 70px;
-        height: 70px;
-        font-size: 13px;
-      }
-    }
 
-    /* ===== 右下角悬浮按钮（声音 & 模式） ===== */
-    #sound-toggle-btn, #mode-toggle-btn {
+    #mode-toggle-btn, #sound-toggle-btn {
       position: fixed;
       bottom: 20px;
       z-index: 1000;
@@ -168,14 +127,13 @@
       font-weight: bold;
       cursor: pointer;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      transition: background-color 0.3s, transform 0.2s;
     }
+
     #sound-toggle-btn {
       right: 20px;
       background-color: #e53935;
       color: white;
     }
-    #sound-toggle-btn:hover { background-color: #b71c1c; transform: scale(1.05); }
 
     #mode-toggle-btn {
       right: 140px;
@@ -183,11 +141,14 @@
       color: white;
       font-size: 14px;
     }
-    #mode-toggle-btn:hover { background-color: #333; transform: scale(1.05); }
+
+    #mode-toggle-btn:hover {
+      background-color: #333;
+    }
   </style>
 </head>
-<body>
 
+<body>
 <header>
   <h1>悠哉的博客</h1>
   <p>分享我的生活与兴趣</p>
@@ -198,8 +159,7 @@
     <h2>悠哉的Telegram</h2>
     <a href="https://t.me/fuchenyouzai" target="_blank" class="telegram-btn">联系 Telegram</a>
   </article>  
-  
-  <!-- 文章内容 -->
+
   <article>
     <h2>凤凰卫视最新直播</h2>
     <div class="video-container">
@@ -208,181 +168,152 @@
   </article>
 
   <article>
-    <h2>音乐分享</h2>
-    <!-- 音乐分享的代码内容省略 -->
+    <h2>我的第一篇博文</h2>
+    <p>这是我的第一篇博客文章，欢迎大家来到我的博客！我会分享生活、技术、旅行和各种有趣的内容。</p>
   </article>
 
   <article>
-    <h2>我的第一篇博文</h2>
-    <p>这是我的第一篇博客文章，欢迎大家来到我的博客！我会分享生活、技术、旅行和各种有趣的内容。</p>
-    <div class="gallery">
-      <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="图片1">
-      <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t4.jpg" alt="图片2">
-    </div>
+    <h2>悠哉的留言板（Gitalk）</h2>
+    <div id="gitalk-container"></div>
   </article>
 
-  <!-- 其他内容省略... -->
+  <article>
+    <h2>悠哉的留言板（Disqus 中文）</h2>
+    <div id="disqus_thread"></div>
+    <script>
+      (function() {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://youzaibolg.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+      })();
+    </script>
+  </article>
 
-  <footer>
-    &copy; 2026 悠哉的博客
-  </footer>
-
-  <!-- 安装按钮 -->
-  <div id="install-btn">
-    安装悠哉博客到设备
-  </div>
-
-  <!-- 右下角按钮 -->
-  <button id="sound-toggle-btn">🔊 打开声音</button>
-  <button id="mode-toggle-btn">🌙 夜晚模式</button>
+  <article>
+    <h2>悠哉的YouTube</h2>
+    <a href="https://www.youtube.com/@拂尘悠哉" target="_blank" class="telegram-btn">访问 YouTube</a>
+  </article>
 </main>
 
-<!-- ===== SW.js 与 Manifest.json 整合代码 ===== -->
+<footer>
+  &copy; 2026 悠哉的博客
+</footer>
 
+<!-- 安装按钮 -->
+<div id="install-btn">
+  安装悠哉博客到设备
+</div>
+
+<!-- 右下角按钮 -->
+<button id="sound-toggle-btn">🔊 打开声音</button>
+<button id="mode-toggle-btn">🌙 夜晚模式</button>
+
+<!-- Service Worker -->
 <script>
-// sw.js 内容
-const CACHE_NAME = 'youzaiblog-cache-v1';
-const urlsToCache = [
-  '/',
-  '/index.html',
-  '/icon-192.png',
-  '/icon-512.png'
-];
+  const CACHE_NAME = 'youzaiblog-cache-v1';
+  const urlsToCache = [
+    '/',
+    '/index.html',
+    '/icon-192.png',
+    '/icon-512.png'
+  ];
 
-// 安装 SW 并缓存关键资源
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
-      .then(() => self.skipWaiting())
-  );
-});
-
-// 激活 SW
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(keyList => {
-      return Promise.all(keyList.map(key => {
-        if (key !== CACHE_NAME) return caches.delete(key);
-      }));
-    ).then(() => self.clients.claim());
+  // 安装 SW 并缓存关键资源
+  self.addEventListener('install', event => {
+    event.waitUntil(
+      caches.open(CACHE_NAME)
+        .then(cache => cache.addAll(urlsToCache))
+        .then(() => self.skipWaiting())
+    );
   });
-});
 
-// 拦截请求，先缓存后网络
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => response || fetch(event.request))
-  );
-});
+  // 激活 SW
+  self.addEventListener('activate', event => {
+    event.waitUntil(
+      caches.keys().then(keyList => {
+        return Promise.all(keyList.map(key => {
+          if (key !== CACHE_NAME) return caches.delete(key);
+        }));
+      }).then(() => self.clients.claim())
+    );
+  });
 
-// manifest.json 内容
-const manifest = {
-  "name": "悠哉的博客",
-  "short_name": "悠哉博客",
-  "start_url": "./index.html",
-  "display": "standalone",
-  "background_color": "#f4f4f4",
-  "theme_color": "#4CAF50",
-  "orientation": "portrait",
-  "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
+  // 拦截请求，先缓存后网络
+  self.addEventListener('fetch', event => {
+    event.respondWith(
+      caches.match(event.request)
+        .then(response => response || fetch(event.request))
+    );
+  });
+</script>
+
+<!-- YouTube Player API -->
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+  let livePlayer;
+  let soundOn = false;
+
+  function onYouTubeIframeAPIReady() {
+    const latestLiveID = 'fN9uYWCjQaw';
+    livePlayer = new YT.Player('live-player', {
+      videoId: latestLiveID,
+      playerVars: { autoplay: 1, mute: 1, controls: 1, modestbranding: 1 },
+      events: { 'onReady': (event) => { event.target.mute(); } }
+    });
+  }
+
+  // ===== 右下角声音开关按钮 =====
+  const soundBtn = document.getElementById('sound-toggle-btn');
+  soundBtn.addEventListener('click', () => {
+    if (!livePlayer) return;
+    if (soundOn) {
+      livePlayer.mute();
+      soundBtn.textContent = '🔊 打开声音';
+      soundOn = false;
+    } else {
+      livePlayer.unMute();
+      soundBtn.textContent = '🔇 关闭声音';
+      soundOn = true;
     }
-  ]
-};
+  });
 
-// 注册 service worker
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js')
-    .then(registration => console.log('Service Worker 注册成功:', registration.scope))
-    .catch(err => console.log('Service Worker 注册失败:', err));
-}
+  // ===== 白天/夜晚模式切换 =====
+  const modeToggleBtn = document.getElementById('mode-toggle-btn');
+  modeToggleBtn.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    if (document.body.classList.contains('dark-mode')) {
+      modeToggleBtn.textContent = '🌙 白天模式';
+    } else {
+      modeToggleBtn.textContent = '🌙 夜晚模式';
+    }
+  });
 
-// ===== 安装按钮逻辑 =====
-const installBtn = document.getElementById('install-btn');
-let deferredPrompt;
-const isEdge = /Edg/i.test(navigator.userAgent);
-const isChrome = /Chrome/i.test(navigator.userAgent) && !isEdge;
-
-if (isChrome) {
+  // ===== 安装按钮功能 =====
+  const installBtn = document.getElementById('install-btn');
+  let deferredPrompt;
+  
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
+    installBtn.style.display = 'block';
   });
-}
 
-installBtn.addEventListener('click', async () => {
-  if (isChrome) {
-    if (!deferredPrompt) { alert("PWA 安装条件未满足，或已安装"); return; }
-    deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
-    deferredPrompt = null;
-  } else if (isEdge) {
-    alert("请通过浏览器菜单选择“安装或创建快捷方式”来安装到手机或电脑桌面。");
-  } else {
-    alert("当前浏览器不支持自动安装，请使用 Chrome 或 Edge 浏览器。");
-  }
-});
-
-// ===== YouTube Player API 初始化（凤凰卫视最新直播） =====
-let livePlayer;
-let soundOn = false;
-
-function onYouTubeIframeAPIReady() {
-  const latestLiveID = 'fN9uYWCjQaw';
-  livePlayer = new YT.Player('live-player', {
-    videoId: latestLiveID,
-    playerVars: { autoplay: 1, mute: 1, controls: 1, modestbranding: 1 },
-    events: { 'onReady': (event) => { event.target.mute(); } }
+  installBtn.addEventListener('click', () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((result) => {
+        if (result.outcome === 'accepted') {
+          console.log('用户接受了安装');
+        } else {
+          console.log('用户拒绝了安装');
+        }
+        deferredPrompt = null;
+      });
+    }
   });
-}
-
-// ===== 右下角声音开关按钮 =====
-const soundBtn = document.getElementById('sound-toggle-btn');
-soundBtn.addEventListener('click', () => {
-  if (!livePlayer) return;
-  if (soundOn) {
-    livePlayer.mute();
-    soundBtn.textContent = '🔊 打开声音';
-    soundOn = false;
-  } else {
-    livePlayer.unMute();
-    soundBtn.textContent = '🔇 关闭声音';
-    soundOn = true;
-  }
-});
-
-// ===== 白天/夜晚模式切换按钮 =====
-const modeBtn = document.getElementById('mode-toggle-btn');
-const currentMode = localStorage.getItem('theme') || 'light'; // 默认使用 'light' 模式
-if (currentMode === 'dark') {
-  document.body.classList.add('dark-mode');
-  modeBtn.textContent = "☀️ 白天模式";
-} else {
-  document.body.classList.remove('dark-mode');
-  modeBtn.textContent = "🌙 夜晚模式";
-}
-
-modeBtn.addEventListener('click', () => {
-  document.body.classList.toggle('dark-mode');
-  if (document.body.classList.contains('dark-mode')) {
-    modeBtn.textContent = "☀️ 白天模式";
-    localStorage.setItem('theme', 'dark'); // 保存夜间模式
-  } else {
-    modeBtn.textContent = "🌙 夜晚模式";
-    localStorage.setItem('theme', 'light'); // 保存白天模式
-  }
-});
 </script>
 
 </body>
 </html>
+  
