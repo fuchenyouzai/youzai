@@ -254,6 +254,49 @@ a.admin-btn:hover { background-color: #b71c1c; }
 <div id="youtube-feed" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; margin-top:10px;"></div>
 </article>
 
+
+
+<!-- 直播模块 -->
+<article>
+  <h2>我的 YouTube 直播</h2>
+  <div class="video-container">
+    <div id="live-player">加载中...</div>
+  </div>
+</article>
+
+<script>
+  // 初始化 YouTube 直播播放器
+  let livePlayer;
+
+  function onYouTubeIframeAPIReady() {
+    const liveVideoID = 'TCGeG2o7XE8'; // 替换为你的直播视频 ID
+    livePlayer = new YT.Player('live-player', {
+      videoId: liveVideoID,
+      playerVars: { 
+        autoplay: 0,  // 自动播放
+        mute: 0,      // 音频不静音
+        controls: 1,  // 显示控制栏
+        modestbranding: 1  // 隐藏 YouTube 标志
+      },
+      events: {
+        'onReady': function(event) {
+          event.target.playVideo();  // 直播准备好时开始播放
+        },
+        'onError': function(event) {
+          document.getElementById('live-player').innerText = '无法加载直播视频，请稍后再试。';
+        }
+      }
+    });
+  }
+</script>
+
+<!-- YouTube IFrame API -->
+<script src="https://www.youtube.com/iframe_api"></script>
+
+
+
+
+
 <article>
 <h2>悠哉的留言板（Gitalk）</h2>
 <div id="gitalk-container"></div>
