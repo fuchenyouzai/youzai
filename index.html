@@ -1,203 +1,282 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>悠哉的博客</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>悠哉的博客</title>
 
-  <!-- PWA Manifest -->
-  <script type="application/json" id="manifest-json">
-    {
-      "name": "悠哉的博客",
-      "short_name": "悠哉博客",
-      "start_url": "./index.html",
-      "display": "standalone",
-      "background_color": "#f4f4f4",
-      "theme_color": "#4CAF50",
-      "orientation": "portrait",
-      "icons": [
-        {
-          "src": "icon-192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        },
-        {
-          "src": "icon-512.png",
-          "sizes": "512x512",
-          "type": "image/png"
-        }
-      ]
-    }
-  </script>
+<!-- PWA Manifest -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#4CAF50">
 
-  <!-- iOS 安装支持 -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="悠哉的博客">
-  <link rel="apple-touch-icon" href="/icon-192.png">
-  
-  <style>
-    /* ===== 颜色变量 & 白天/夜晚模式 ===== */
-    :root {
-      --bg-color: #f4f4f4;
-      --text-color: #333;
-      --header-bg: #4CAF50;
-      --footer-bg: #333;
-      --footer-text: #fff;
-      --article-bg: #fff;
-    }
-    body.dark-mode {
-      --bg-color: #1e1e1e;
-      --text-color: #f4f4f4;
-      --header-bg: #333;
-      --footer-bg: #222;
-      --footer-text: #f4f4f4;
-      --article-bg: #2a2a2a;
-    }
+<!-- iOS 安装支持 -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="悠哉的博客">
+<link rel="apple-touch-icon" href="/icon-192.png">
 
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      font-family: "Helvetica Neue", Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
+<style>
+/* ===== 颜色变量 & 白天/夜晚模式 ===== */
+:root {
+  --bg-color: #f4f4f4;
+  --text-color: #333;
+  --header-bg: #4CAF50;
+  --footer-bg: #333;
+  --footer-text: #fff;
+  --article-bg: #fff;
+}
+body.dark-mode {
+  --bg-color: #1e1e1e;
+  --text-color: #f4f4f4;
+  --header-bg: #333;
+  --footer-bg: #222;
+  --footer-text: #f4f4f4;
+  --article-bg: #2a2a2a;
+}
 
-    header {
-      background-color: var(--header-bg);
-      color: white;
-      padding: 20px 10px;
-      text-align: center;
-    }
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
 
-    main {
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 0 10px;
-    }
+header {
+  background-color: var(--header-bg);
+  color: white;
+  padding: 20px 10px;
+  text-align: center;
+}
 
-    article {
-      background: var(--article-bg);
-      color: var(--text-color);
-      margin-bottom: 20px;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
+main {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0 10px;
+}
 
-    footer {
-      text-align: center;
-      padding: 15px;
-      background: var(--footer-bg);
-      color: var(--footer-text);
-      margin-top: 20px;
-    }
+article {
+  background: var(--article-bg);
+  color: var(--text-color);
+  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
 
-    /* ===== Button styles ===== */
-    #install-btn {
-      position: fixed;
-      top: 160px;
-      right: 20px;
-      z-index: 999;
-      width: 80px;
-      height: 80px;
-      background-color: #4CAF50;
-      color: white;
-      border-radius: 50%;
-      font-size: 14px;
-      font-weight: bold;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      transition: background-color 0.3s, transform 0.2s;
-    }
+h2 { color: #4CAF50; }
+img { max-width: 100%; border-radius: 5px; cursor: pointer; transition: transform 0.3s; }
+iframe { width: 100%; border: none; border-radius: 5px; }
+audio { width: 100%; margin-top: 10px; }
 
-    #install-btn:hover {
-      background-color: #388E3C;
-      transform: scale(1.05);
-    }
+footer {
+  text-align: center;
+  padding: 15px;
+  background: var(--footer-bg);
+  color: var(--footer-text);
+  margin-top: 20px;
+}
 
-    #mode-toggle-btn, #sound-toggle-btn {
-      position: fixed;
-      bottom: 20px;
-      z-index: 1000;
-      padding: 12px 18px;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+.gallery img {
+  width: 48%; /* 横向展示，两张图片并排 */
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+.gallery img:hover {
+  transform: scale(1.05);
+}
 
-    #sound-toggle-btn {
-      right: 20px;
-      background-color: #e53935;
-      color: white;
-    }
+a.telegram-btn, a.admin-btn {
+  display: inline-block;
+  padding: 10px 15px;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+}
+a.telegram-btn { background-color: #0088cc; }
+a.telegram-btn:hover { background-color: #006699; }
+a.admin-btn { background-color: #e53935; }
+a.admin-btn:hover { background-color: #b71c1c; }
 
-    #mode-toggle-btn {
-      right: 140px;
-      background-color: #555;
-      color: white;
-      font-size: 14px;
-    }
+.video-container, .article-video {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+.video-container iframe, .article-video iframe, .video-container #live-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
 
-    #mode-toggle-btn:hover {
-      background-color: #333;
-    }
-  </style>
+/* ===== 右上角安装按钮（圆形） ===== */
+#install-btn {
+  position: fixed;
+  top: 160px;
+  right: 20px;
+  z-index: 999;
+  width: 80px;
+  height: 80px;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: background-color 0.3s, transform 0.2s;
+}
+#install-btn:hover {
+  background-color: #388E3C;
+  transform: scale(1.05);
+}
+@media screen and (max-width: 768px) {
+  #install-btn {
+    top: 100px;
+    width: 70px;
+    height: 70px;
+    font-size: 13px;
+  }
+}
+
+/* ===== 右下角悬浮按钮（声音 & 模式） ===== */
+#sound-toggle-btn, #mode-toggle-btn {
+  position: fixed;
+  bottom: 20px;
+  z-index: 1000;
+  padding: 12px 18px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: background-color 0.3s, transform 0.2s;
+}
+#sound-toggle-btn {
+  right: 20px;
+  background-color: #e53935;
+  color: white;
+}
+#sound-toggle-btn:hover { background-color: #b71c1c; transform: scale(1.05); }
+
+#mode-toggle-btn {
+  right: 140px;
+  background-color: #555;
+  color: white;
+  font-size: 14px;
+}
+#mode-toggle-btn:hover { background-color: #333; transform: scale(1.05); }
+</style>
 </head>
-
 <body>
+
 <header>
-  <h1>悠哉的博客</h1>
-  <p>分享我的生活与兴趣</p>
+<h1>悠哉的博客</h1>
+<p>分享我的生活与兴趣</p>
 </header>
 
 <main>
-  <article>
-    <h2>悠哉的Telegram</h2>
-    <a href="https://t.me/fuchenyouzai" target="_blank" class="telegram-btn">联系 Telegram</a>
-  </article>  
+<article>
+<h2>悠哉的Telegram</h2>
+<a href="https://t.me/fuchenyouzai" target="_blank" class="telegram-btn">联系 Telegram</a>
+</article>	
+	
+<!-- 文章内容 -->
+<article>
+<h2>凤凰卫视最新直播</h2>
+<div class="video-container">
+  <div id="live-player">加载中...</div>
+</div>
+</article>
 
-  <article>
-    <h2>凤凰卫视最新直播</h2>
-    <div class="video-container">
-      <div id="live-player">加载中...</div>
-    </div>
-  </article>
+<article>
+<h2>音乐分享</h2>
+<div class="video-container">
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/WbW00ghKFt0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+</article>
 
-  <article>
-    <h2>我的第一篇博文</h2>
-    <p>这是我的第一篇博客文章，欢迎大家来到我的博客！我会分享生活、技术、旅行和各种有趣的内容。</p>
-  </article>
+<article>
+<h2>我的第一篇博文</h2>
+<p>这是我的第一篇博客文章，欢迎大家来到我的博客！我会分享生活、技术、旅行和各种有趣的内容。</p>
+<!-- 横向展示两张图片 -->
+<div class="gallery">
+  <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="图片1">
+  <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t4.jpg" alt="图片2">
+</div>
+</article>
 
-  <article>
-    <h2>悠哉的留言板（Gitalk）</h2>
-    <div id="gitalk-container"></div>
-  </article>
+<article>
+  <h2>旅行见闻</h2>
+  <p>上周我去了黄石公园，那里风景非常美，我拍了很多照片和视频想要分享给大家。</p>
+  <div class="article-video">
+    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="黄石公园短视频" allowfullscreen></iframe>
+  </div>
+</article>
 
-  <article>
-    <h2>悠哉的留言板（Disqus 中文）</h2>
-    <div id="disqus_thread"></div>
-    <script>
-      (function() {
-        var d = document, s = d.createElement('script');
-        s.src = 'https://youzaibolg.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-      })();
-    </script>
-  </article>
+<article>
+  <h2>音乐分享</h2>
+  <p>这是我最近发现的一首音乐，大家可以试听。</p>
+  <audio controls preload="auto" controlsList="nodownload">
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    您的浏览器不支持音频播放。
+  </audio>
+</article>
 
-  <article>
-    <h2>悠哉的YouTube</h2>
-    <a href="https://www.youtube.com/@拂尘悠哉" target="_blank" class="telegram-btn">访问 YouTube</a>
-  </article>
+<article>
+<h2>悠哉(„• ֊ •„)੭</h2>
+<div class="gallery">
+<img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="图片1">
+<img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t4.jpg" alt="图片3">
+</div>
+</article>
+
+<article>
+<h2>悠哉的YouTube</h2>
+<a href="https://www.youtube.com/@拂尘悠哉" target="_blank" class="telegram-btn">访问 YouTube</a>
+<div id="youtube-feed" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; margin-top:10px;"></div>
+</article>
+
+<article>
+<h2>悠哉的留言板（Gitalk）</h2>
+<div id="gitalk-container"></div>
+<a href="https://github.com/fuchenyouzai/youzai/issues" target="_blank" class="admin-btn" style="margin-top:10px;">查看 GitHub 后台评论</a>
+</article>
+
+<article>
+<h2>悠哉的留言板（Disqus 中文）</h2>
+<div id="disqus_thread"></div>
+<script>
+(function() { 
+    var d = document, s = d.createElement('script');
+    s.src = 'https://youzaibolg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+})();
+</script>
+</article>
+
 </main>
 
 <footer>
-  &copy; 2026 悠哉的博客
+&copy; 2026 悠哉的博客
 </footer>
 
 <!-- 安装按钮 -->
@@ -209,111 +288,194 @@
 <button id="sound-toggle-btn">🔊 打开声音</button>
 <button id="mode-toggle-btn">🌙 夜晚模式</button>
 
-<!-- Service Worker -->
-<script>
-  const CACHE_NAME = 'youzaiblog-cache-v1';
-  const urlsToCache = [
-    '/',
-    '/index.html',
-    '/icon-192.png',
-    '/icon-512.png'
-  ];
-
-  // 安装 SW 并缓存关键资源
-  self.addEventListener('install', event => {
-    event.waitUntil(
-      caches.open(CACHE_NAME)
-        .then(cache => cache.addAll(urlsToCache))
-        .then(() => self.skipWaiting())
-    );
-  });
-
-  // 激活 SW
-  self.addEventListener('activate', event => {
-    event.waitUntil(
-      caches.keys().then(keyList => {
-        return Promise.all(keyList.map(key => {
-          if (key !== CACHE_NAME) return caches.delete(key);
-        }));
-      }).then(() => self.clients.claim())
-    );
-  });
-
-  // 拦截请求，先缓存后网络
-  self.addEventListener('fetch', event => {
-    event.respondWith(
-      caches.match(event.request)
-        .then(response => response || fetch(event.request))
-    );
-  });
-</script>
-
-<!-- YouTube Player API -->
+<!-- Gitalk -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<!-- YouTube IFrame API -->
 <script src="https://www.youtube.com/iframe_api"></script>
-<script>
-  let livePlayer;
-  let soundOn = false;
 
-  function onYouTubeIframeAPIReady() {
-    const latestLiveID = 'fN9uYWCjQaw';
-    livePlayer = new YT.Player('live-player', {
-      videoId: latestLiveID,
-      playerVars: { autoplay: 1, mute: 1, controls: 1, modestbranding: 1 },
-      events: { 'onReady': (event) => { event.target.mute(); } }
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Gitalk 初始化
+  const gitalk = new Gitalk({
+    clientID: 'Ov23lijfU0G3M7jiMFAW',
+    clientSecret: '47120dd1810d3a2a9aa0033211f5ee73ef29baa3',
+    repo: 'youzai',
+    owner: 'fuchenyouzai',
+    admin: ['fuchenyouzai'],
+    id: location.pathname,
+    distractionFreeMode: false,
+    language: 'zh-CN'
+  });
+  gitalk.render('gitalk-container');
+
+  // 图片点击放大
+  document.querySelectorAll('.gallery img').forEach(img => {
+    img.addEventListener('click', () => {
+      const overlay = document.createElement('div');
+      overlay.style.position = 'fixed';
+      overlay.style.top = 0;
+      overlay.style.left = 0;
+      overlay.style.width = '100%';
+      overlay.style.height = '100%';
+      overlay.style.background = 'rgba(0,0,0,0.8)';
+      overlay.style.display = 'flex';
+      overlay.style.justifyContent = 'center';
+      overlay.style.alignItems = 'center';
+      overlay.style.cursor = 'pointer';
+      overlay.innerHTML = `<img src="${img.src}" style="max-width:90%; max-height:90%; border-radius:5px;">`;
+      overlay.addEventListener('click', () => document.body.removeChild(overlay));
+      document.body.appendChild(overlay);
+    });
+  });
+
+  // YouTube 视频墙
+  const videos = [
+    {id: "ZB9QSD_SWmM", type: "shorts", title: "最新 Shorts 视频"},
+    {id: "dQw4w9WgXcQ", type: "video", title: "示例视频 1"},
+    {id: "oHg5SJYRHA0", type: "video", title: "示例视频 2"}
+  ];
+  const feedContainer = document.getElementById("youtube-feed");
+  if (feedContainer) {
+    videos.forEach(v => {
+      const wrapper = document.createElement("div");
+      wrapper.style.display = "flex";
+      wrapper.style.flexDirection = "column";
+      wrapper.style.gap = "5px";
+
+      const iframeWrapper = document.createElement("div");
+      iframeWrapper.style.position = "relative";
+      iframeWrapper.style.width = "100%";
+      iframeWrapper.style.height = 0;
+      iframeWrapper.style.overflow = "hidden";
+      iframeWrapper.style.borderRadius = "5px";
+      iframeWrapper.style.paddingBottom = v.type === "shorts" ? "177.78%" : "56.25%";
+      iframeWrapper.innerHTML = `<iframe src="https://www.youtube.com/embed/${v.id}" 
+              style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"
+              title="${v.title}" allowfullscreen></iframe>`;
+
+      const infoDiv = document.createElement("div");
+      infoDiv.style.display = "flex";
+      infoDiv.style.flexDirection = "column";
+      infoDiv.style.alignItems = "center";
+      infoDiv.style.gap = "5px";
+
+      const titleEl = document.createElement("p");
+      titleEl.textContent = v.title;
+      titleEl.style.textAlign = "center";
+      titleEl.style.margin = "0";
+      titleEl.style.fontWeight = "bold";
+      titleEl.style.fontSize = "14px";
+
+      const btn = document.createElement("a");
+      btn.href = `https://www.youtube.com/watch?v=${v.id}`;
+      btn.target = "_blank";
+      btn.textContent = "在 YouTube 上观看";
+      btn.style.display = "inline-block";
+      btn.style.padding = "5px 10px";
+      btn.style.backgroundColor = "#ff0000";
+      btn.style.color = "#fff";
+      btn.style.borderRadius = "4px";
+      btn.style.fontSize = "12px";
+      btn.style.textDecoration = "none";
+
+      infoDiv.appendChild(titleEl);
+      infoDiv.appendChild(btn);
+      wrapper.appendChild(iframeWrapper);
+      wrapper.appendChild(infoDiv);
+      feedContainer.appendChild(wrapper);
     });
   }
 
-  // ===== 右下角声音开关按钮 =====
-  const soundBtn = document.getElementById('sound-toggle-btn');
-  soundBtn.addEventListener('click', () => {
-    if (!livePlayer) return;
-    if (soundOn) {
-      livePlayer.mute();
-      soundBtn.textContent = '🔊 打开声音';
-      soundOn = false;
-    } else {
-      livePlayer.unMute();
-      soundBtn.textContent = '🔇 关闭声音';
-      soundOn = true;
-    }
-  });
+  // ===== PWA Service Worker 注册 =====
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then(registration => console.log('Service Worker 注册成功:', registration.scope))
+      .catch(err => console.log('Service Worker 注册失败:', err));
+  }
 
-  // ===== 白天/夜晚模式切换 =====
-  const modeToggleBtn = document.getElementById('mode-toggle-btn');
-  modeToggleBtn.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    if (document.body.classList.contains('dark-mode')) {
-      modeToggleBtn.textContent = '🌙 白天模式';
-    } else {
-      modeToggleBtn.textContent = '🌙 夜晚模式';
-    }
-  });
-
-  // ===== 安装按钮功能 =====
+  // ===== 安装按钮逻辑 =====
   const installBtn = document.getElementById('install-btn');
   let deferredPrompt;
-  
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    installBtn.style.display = 'block';
-  });
+  const isEdge = /Edg/i.test(navigator.userAgent);
+  const isChrome = /Chrome/i.test(navigator.userAgent) && !isEdge;
 
-  installBtn.addEventListener('click', () => {
-    if (deferredPrompt) {
+  if (isChrome) {
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+    });
+  }
+
+  installBtn.addEventListener('click', async () => {
+    if (isChrome) {
+      if (!deferredPrompt) { alert("PWA 安装条件未满足，或已安装"); return; }
       deferredPrompt.prompt();
-      deferredPrompt.userChoice.then((result) => {
-        if (result.outcome === 'accepted') {
-          console.log('用户接受了安装');
-        } else {
-          console.log('用户拒绝了安装');
-        }
-        deferredPrompt = null;
-      });
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+    } else if (isEdge) {
+      alert("请通过浏览器菜单选择“安装或创建快捷方式”来安装到手机或电脑桌面。");
+    } else {
+      alert("当前浏览器不支持自动安装，请使用 Chrome 或 Edge 浏览器。");
     }
   });
+
+}); // DOMContentLoaded 结束
+
+// ===== YouTube Player API 初始化（凤凰卫视最新直播） =====
+let livePlayer;
+let soundOn = false;
+
+function onYouTubeIframeAPIReady() {
+  const latestLiveID = 'fN9uYWCjQaw';
+  livePlayer = new YT.Player('live-player', {
+    videoId: latestLiveID,
+    playerVars: { autoplay: 1, mute: 1, controls: 1, modestbranding: 1 },
+    events: { 'onReady': (event) => { event.target.mute(); } }
+  });
+}
+
+// ===== 右下角声音开关按钮 =====
+const soundBtn = document.getElementById('sound-toggle-btn');
+soundBtn.addEventListener('click', () => {
+  if (!livePlayer) return;
+  if (soundOn) {
+    livePlayer.mute();
+    soundBtn.textContent = '🔊 打开声音';
+    soundOn = false;
+  } else {
+    livePlayer.unMute();
+    soundBtn.textContent = '🔇 关闭声音';
+    soundOn = true;
+  }
+});
+
+// ===== 白天/夜晚模式切换按钮 =====
+const modeBtn = document.getElementById('mode-toggle-btn');
+const currentMode = localStorage.getItem('theme') || 'light'; // 默认使用 'light' 模式
+if (currentMode === 'dark') {
+  document.body.classList.add('dark-mode');
+  modeBtn.textContent = "☀️ 白天模式";
+} else {
+  document.body.classList.remove('dark-mode');
+  modeBtn.textContent = "🌙 夜晚模式";
+}
+
+modeBtn.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+  if (document.body.classList.contains('dark-mode')) {
+    modeBtn.textContent = "☀️ 白天模式";
+    localStorage.setItem('theme', 'dark'); // 保存夜间模式
+  } else {
+    modeBtn.textContent = "🌙 夜晚模式";
+    localStorage.setItem('theme', 'light'); // 保存白天模式
+  }
+});
 </script>
 
 </body>
 </html>
-  
+    
+    
+
+
