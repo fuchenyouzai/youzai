@@ -64,34 +64,46 @@ article {
 }
 
 h2 { color: #4CAF50; }
-img { max-width:100%; border-radius:5px; }
-iframe { width:100%; border:none; border-radius:5px; }
-audio { width:100%; margin-top:10px; }
+img { max-width: 100%; border-radius: 5px; cursor: pointer; transition: transform 0.3s; }
+iframe { width: 100%; border: none; border-radius: 5px; }
+audio { width: 100%; margin-top: 10px; }
 
 footer {
-  text-align:center;
-  padding:15px;
+  text-align: center;
+  padding: 15px;
   background: var(--footer-bg);
   color: var(--footer-text);
-  margin-top:20px;
+  margin-top: 20px;
 }
 
-.gallery { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
-.gallery img { width:30%; border-radius:5px; cursor:pointer; transition:transform 0.3s; }
-.gallery img:hover { transform:scale(1.05); }
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+.gallery img {
+  width: 48%; /* 横向展示，两张图片并排 */
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+.gallery img:hover {
+  transform: scale(1.05);
+}
 
 a.telegram-btn, a.admin-btn {
-  display:inline-block;
-  padding:10px 15px;
-  color:white;
-  border-radius:5px;
-  text-decoration:none;
-  font-weight:bold;
+  display: inline-block;
+  padding: 10px 15px;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
 }
-a.telegram-btn { background-color:#0088cc; }
-a.telegram-btn:hover { background-color:#006699; }
-a.admin-btn { background-color:#e53935; }
-a.admin-btn:hover { background-color:#b71c1c; }
+a.telegram-btn { background-color: #0088cc; }
+a.telegram-btn:hover { background-color: #006699; }
+a.admin-btn { background-color: #e53935; }
+a.admin-btn:hover { background-color: #b71c1c; }
 
 .video-container, .article-video {
   position: relative;
@@ -104,11 +116,11 @@ a.admin-btn:hover { background-color:#b71c1c; }
 }
 .video-container iframe, .article-video iframe, .video-container #live-player {
   position: absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  border:none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 
 /* ===== 右上角安装按钮（圆形） ===== */
@@ -185,12 +197,11 @@ a.admin-btn:hover { background-color:#b71c1c; }
 <article>
 <h2>我的第一篇博文</h2>
 <p>这是我的第一篇博客文章，欢迎大家来到我的博客！我会分享生活、技术、旅行和各种有趣的内容。</p>
-<img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="图片1">
-
-<!-- 插入空白的 div 来增加间距 -->
-<div style="height: 20px;"></div> 
-
-<img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t4.jpg" alt="图片3">
+<!-- 横向展示两张图片 -->
+<div class="gallery">
+  <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="图片1">
+  <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t4.jpg" alt="图片2">
+</div>
 </article>
 
 <article>
@@ -235,10 +246,6 @@ a.admin-btn:hover { background-color:#b71c1c; }
 <h2>悠哉(„• ֊ •„)੭</h2>
 <div class="gallery">
 <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="图片1">
-
-<!-- 插入空白的 div 来增加间距 -->
-<div style="height: 20px;"></div> 
-
 <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t4.jpg" alt="图片3">
 </div>
 </article>
@@ -270,7 +277,7 @@ a.admin-btn:hover { background-color:#b71c1c; }
 
 <article>
 <h2>悠哉的Telegram</h2>
-<a href="https://t.me/fuchenyouzaibot" target="_blank" class="telegram-btn">联系 Telegram</a>
+<a href="https://t.me/fuchenyouzai" target="_blank" class="telegram-btn">联系 Telegram</a>
 </article>
 
 </main>
@@ -475,3 +482,7 @@ modeBtn.addEventListener('click', () => {
 
 </body>
 </html>
+    
+    
+
+
