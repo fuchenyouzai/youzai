@@ -19,10 +19,11 @@ jobs:
       with:
         node-version: '14'
 
-    - name: Set up JDK 17
+    - name: Set up JDK 17 (Adoptium)
       uses: actions/setup-java@v2
       with:
         java-version: '17'
+        distribution: 'temurin'  # 设置 JDK 发行版为 Adoptium (temurin)
 
     - name: Install dependencies
       run: |
