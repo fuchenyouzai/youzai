@@ -3,8 +3,8 @@ name: Build WebAPK
 on:
   push:
     branches:
-      - main  # 你也可以选择其他分支
-  workflow_dispatch:  # 支持手动触发工作流
+      - main  # 或者你选择的分支
+  workflow_dispatch:
 
 jobs:
   build:
@@ -25,11 +25,11 @@ jobs:
 
     - name: Generate WebAPK using Bubblewrap
       run: |
-        bubblewrap init https://www.fuchenyouzai.dpdns.org  # 替换为你的博客网址
+        bubblewrap init https://www.fuchenyouzai.dpdns.org
         bubblewrap build
 
     - name: Upload WebAPK as artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4  # 使用 v4 版本
       with:
         name: webapk
-        path: ./webapk/*.apk  # 生成的 APK 路径
+        path: ./webapk/*.apk  # 指定 WebAPK 文件的路径
