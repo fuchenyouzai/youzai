@@ -406,22 +406,44 @@ liveChannels.forEach(channel => {
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // 新增：初始化全局控制变量与原生音频收集
-  // 收集页面所有原生音频元素
+  // 新增：1. 收集所有画廊图片 & 初始化当前索引
+  const galleryImages = Array.from(document.querySelectorAll('.gallery img'));
+  let currentImageIndex = 0;
+
+  // 新增：2. 图片切换核心函数（更新放大层图片）
+  function updateOverlayImage(index) {
+    const overlayImg = document.querySelector('.image-overlay img');
+    if (overlayImg && galleryImages[index]) {
+      overlayImg.src = galleryImages[index].src;
+      overlayImg.alt = galleryImages[index].alt || `图片${index + 1}`;
+    }
+    currentImageIndex = index; // 更新当前索引
+  }
+
+  // 新增：3. 上一张/下一张切换函数（支持循环）
+  function showPrevImage() {
+    let newIndex = currentImageIndex - 1;
+    newIndex = newIndex < 0 ? galleryImages.length - 1 : newIndex; // 循环到最后一张
+    updateOverlayImage(newIndex);
+  }
+  function showNextImage() {
+    let newIndex = currentImageIndex + 1;
+    newIndex = newIndex >= galleryImages.length ? 0 : newIndex; // 循环到第一张
+    updateOverlayImage(newIndex);
+  }
+
+  // 原有：全局声音控制初始化（保留）
   window.globalAudioElements = Array.from(document.querySelectorAll('audio'));
-  // 初始化全局声音状态（默认静音）
   window.isGlobalSoundOn = false;
-  // 获取全局控制元素
   const globalSoundBtn = document.getElementById('global-sound-btn');
   const globalVolumeSlider = document.getElementById('global-volume-slider');
 
-  // 新增：初始同步原生音频状态
   window.globalAudioElements.forEach(audio => {
     audio.muted = !window.isGlobalSoundOn;
     audio.volume = globalVolumeSlider.value / 100;
   });
 
-  // 原有：Gitalk 初始化
+  // 原有：Gitalk 初始化（保留）
   const gitalk = new Gitalk({
     clientID: 'Ov23lijfU0G3M7jiMFAW',
     clientSecret: '47120dd1810d3a2a9aa0033211f5ee73ef29baa3',
@@ -434,39 +456,148 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   gitalk.render('gitalk-container');
   
-  // 原有：原音量滑块逻辑（新增同步到全局滑块）
+  // 原有：音量滑块同步逻辑（保留）
   const volumeSlider = document.getElementById('volume-slider');
   volumeSlider.addEventListener('input', (event) => {
     const volume = event.target.value;
-    if (window.livePlayer) {
-      window.livePlayer.setVolume(volume); 
-    }
-    // 新增：同步到全局滑块和所有音频/视频
+    if (window.livePlayer) window.livePlayer.setVolume(volume);
     if (globalVolumeSlider) globalVolumeSlider.value = volume;
     if (window.syncGlobalVolume) window.syncGlobalVolume(volume);
   });
 
-  // 原有：图片点击放大（保留原逻辑）
-  document.querySelectorAll('.gallery img').forEach(img => {
+  // 重写：4. 图片点击放大逻辑（替换原逻辑，支持滑动+按钮）
+  galleryImages.forEach((img, index) => {
     img.addEventListener('click', () => {
+      currentImageIndex = index; // 记录当前点击图片索引
+
+      // 创建放大层容器（带类名方便样式控制）
       const overlay = document.createElement('div');
+      overlay.className = 'image-overlay';
       overlay.style.position = 'fixed';
       overlay.style.top = 0;
       overlay.style.left = 0;
       overlay.style.width = '100%';
       overlay.style.height = '100%';
-      overlay.style.background = 'rgba(0,0,0,0.8)';
+      overlay.style.background = 'rgba(0,0,0,0.9)';
       overlay.style.display = 'flex';
+      overlay.style.flexDirection = 'column';
       overlay.style.justifyContent = 'center';
       overlay.style.alignItems = 'center';
-      overlay.style.cursor = 'pointer';
-      overlay.innerHTML = `<img src="${img.src}" style="max-width:90%; max-height:90%; border-radius:5px;">`;
-      overlay.addEventListener('click', () => document.body.removeChild(overlay));
+      overlay.style.cursor = 'default';
+      overlay.style.zIndex = '9999';
+      overlay.style.padding = '20px';
+      overlay.style.boxSizing = 'border-box';
+
+      // 新增：上一张按钮
+      const prevBtn = document.createElement('button');
+      prevBtn.textContent = '← 上一张';
+      prevBtn.style.position = 'absolute';
+      prevBtn.style.left = '20px';
+      prevBtn.style.padding = '10px 15px';
+      prevBtn.style.backgroundColor = 'rgba(255,255,255,0.2)';
+      prevBtn.style.color = 'white';
+      prevBtn.style.border = 'none';
+      prevBtn.style.borderRadius = '5px';
+      prevBtn.style.fontSize = '16px';
+      prevBtn.style.cursor = 'pointer';
+      prevBtn.style.zIndex = '10';
+      prevBtn.style.transition = 'background 0.3s';
+      prevBtn.addEventListener('mouseover', () => prevBtn.style.backgroundColor = 'rgba(255,255,255,0.4)');
+      prevBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // 阻止关闭放大层
+        showPrevImage();
+      });
+
+      // 新增：下一张按钮
+      const nextBtn = document.createElement('button');
+      nextBtn.textContent = '下一张 →';
+      nextBtn.style.position = 'absolute';
+      nextBtn.style.right = '20px';
+      nextBtn.style.padding = '10px 15px';
+      nextBtn.style.backgroundColor = 'rgba(255,255,255,0.2)';
+      nextBtn.style.color = 'white';
+      nextBtn.style.border = 'none';
+      nextBtn.style.borderRadius = '5px';
+      nextBtn.style.fontSize = '16px';
+      nextBtn.style.cursor = 'pointer';
+      nextBtn.style.zIndex = '10';
+      nextBtn.style.transition = 'background 0.3s';
+      nextBtn.addEventListener('mouseover', () => nextBtn.style.backgroundColor = 'rgba(255,255,255,0.4)');
+      nextBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // 阻止关闭放大层
+        showNextImage();
+      });
+      // 新增：关闭按钮
+      const closeBtn = document.createElement('button');
+      closeBtn.textContent = '× 关闭';
+      closeBtn.style.position = 'absolute';
+      closeBtn.style.top = '20px';
+      closeBtn.style.padding = '8px 12px';
+      closeBtn.style.backgroundColor = 'rgba(255,0,0,0.6)';
+      closeBtn.style.color = 'white';
+      closeBtn.style.border = 'none';
+      closeBtn.style.borderRadius = '5px';
+      closeBtn.style.fontSize = '16px';
+      closeBtn.style.cursor = 'pointer';
+      closeBtn.style.zIndex = '10';
+      closeBtn.style.transition = 'background 0.3s';
+      closeBtn.addEventListener('mouseover', () => closeBtn.style.backgroundColor = 'rgba(255,0,0,0.8)');
+      closeBtn.addEventListener('click', () => {
+        document.body.removeChild(overlay);
+        document.removeEventListener('keydown', handleKeyDown); // 移除键盘监听
+      });
+
+      // 放大图片元素
+      const overlayImg = document.createElement('img');
+      overlayImg.src = img.src;
+      overlayImg.alt = img.alt || `图片${index + 1}`;
+      overlayImg.style.maxWidth = '90%';
+      overlayImg.style.maxHeight = '80%';
+      overlayImg.style.borderRadius = '5px';
+      overlayImg.style.objectFit = 'contain'; // 保证图片不拉伸
+
+      // 组装放大层
+      overlay.appendChild(prevBtn);
+      overlay.appendChild(nextBtn);
+      overlay.appendChild(closeBtn);
+      overlay.appendChild(overlayImg);
+
+      // 点击空白处关闭
+      overlay.addEventListener('click', () => {
+        document.body.removeChild(overlay);
+        document.removeEventListener('keydown', handleKeyDown);
+      });
+
+      // 新增：移动端触摸滑动支持
+      let startX = 0;
+      overlay.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX; // 记录触摸起始位置
+      });
+      overlay.addEventListener('touchend', (e) => {
+        if (!e.changedTouches[0]) return;
+        const endX = e.changedTouches[0].clientX;
+        const diffX = endX - startX; // 计算滑动距离
+        if (diffX > 50) showPrevImage(); // 右滑→上一张
+        if (diffX < -50) showNextImage(); // 左滑→下一张
+      });
+
+      // 新增：PC端键盘方向键控制
+      function handleKeyDown(e) {
+        if (e.key === 'ArrowLeft') showPrevImage(); // 左箭头→上一张
+        if (e.key === 'ArrowRight') showNextImage(); // 右箭头→下一张
+        if (e.key === 'Escape') { // ESC键→关闭
+          document.body.removeChild(overlay);
+          document.removeEventListener('keydown', handleKeyDown);
+        }
+      }
+      document.addEventListener('keydown', handleKeyDown);
+
+      // 加入页面
       document.body.appendChild(overlay);
     });
   });
 
-  // 原有：YouTube视频墙逻辑（新增iframe API支持与全局控制）
+  // 原有：YouTube视频墙逻辑（保留，无修改）
   const videos = [
     {id: "ZB9QSD_SWmM", type: "shorts", title: "最新 Shorts 视频"},
     {id: "ZB9QSD_SWmM", type: "shorts", title: "示例视频 1"},
@@ -490,8 +621,6 @@ document.addEventListener('DOMContentLoaded', () => {
       iframeWrapper.style.overflow = "hidden";
       iframeWrapper.style.borderRadius = "5px";
       iframeWrapper.style.paddingBottom = v.type === "shorts" ? "177.78%" : "56.25%";
-      
-      // 新增：为视频墙iframe添加enablejsapi=1
       const iframeId = `video-iframe-${index}`;
       iframeWrapper.innerHTML = `<iframe src="https://www.youtube.com/embed/${v.id}?enablejsapi=1" 
               style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"
@@ -499,7 +628,6 @@ document.addEventListener('DOMContentLoaded', () => {
               allowfullscreen
               id="${iframeId}"></iframe>`;
 
-      // 原有：视频信息生成
       const infoDiv = document.createElement("div");
       infoDiv.style.display = "flex";
       infoDiv.style.flexDirection = "column";
@@ -531,7 +659,6 @@ document.addEventListener('DOMContentLoaded', () => {
       wrapper.appendChild(infoDiv);
       feedContainer.appendChild(wrapper);
 
-      // 新增：视频墙iframe加载后加入全局控制
       const videoIframe = document.getElementById(iframeId);
       videoIframe.onload = () => {
         setTimeout(() => {
@@ -551,22 +678,20 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     });
   }
-  // 原有：PWA Service Worker 注册（保留原逻辑）
+  // 原有：PWA Service Worker 注册（保留）
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js')
       .then(registration => console.log('Service Worker 注册成功:', registration.scope))
       .catch(err => console.log('Service Worker 注册失败:', err));
   }
 
-  // 新增：全局音量同步函数（挂载到window，方便跨脚本访问）
+  // 原有：全局音量同步函数（保留）
   window.syncGlobalVolume = function(volume) {
-    // 同步原生音频音量（转换为0-1范围）
     if (window.globalAudioElements) {
       window.globalAudioElements.forEach(audio => {
         if (audio) audio.volume = volume / 100;
       });
     }
-    // 同步所有YouTube播放器音量
     if (window.globalYoutubePlayers) {
       window.globalYoutubePlayers.forEach(player => {
         if (player && typeof player.setVolume === 'function') {
@@ -574,26 +699,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     }
-    // 同步主直播播放器音量
     if (window.livePlayer) {
       window.livePlayer.setVolume(volume);
     }
   };
 
-  // 新增：全局声音开关函数
+  // 原有：全局声音开关函数（保留）
   window.toggleGlobalSound = function() {
     window.isGlobalSoundOn = !window.isGlobalSoundOn;
-    // 更新全局按钮文字
     if (globalSoundBtn) {
       globalSoundBtn.textContent = window.isGlobalSoundOn ? '🔇 全局静音' : '🔊 全局有声';
     }
-    // 同步原生音频静音状态
     if (window.globalAudioElements) {
       window.globalAudioElements.forEach(audio => {
         if (audio) audio.muted = !window.isGlobalSoundOn;
       });
     }
-    // 同步所有YouTube播放器静音状态
     if (window.globalYoutubePlayers) {
       window.globalYoutubePlayers.forEach(player => {
         if (player && typeof player.mute === 'function' && typeof player.unMute === 'function') {
@@ -601,7 +722,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     }
-    // 同步主直播播放器与原有声音按钮
     if (window.livePlayer) {
       window.isGlobalSoundOn ? window.livePlayer.unMute() : window.livePlayer.mute();
     }
@@ -614,7 +734,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // 原有：PWA安装按钮逻辑（保留原逻辑）
+  // 原有：PWA安装按钮逻辑（保留）
   const installBtn = document.getElementById('install-btn');
   let deferredPrompt;
   const isEdge = /Edg/i.test(navigator.userAgent);
@@ -640,12 +760,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 新增：绑定全局控制按钮事件
-  // 全局声音开关点击事件
+  // 原有：绑定全局控制按钮事件（保留）
   if (globalSoundBtn) {
     globalSoundBtn.addEventListener('click', window.toggleGlobalSound);
   }
-  // 全局音量滑块拖动事件
   if (globalVolumeSlider) {
     globalVolumeSlider.addEventListener('input', (e) => {
       const volume = e.target.value;
