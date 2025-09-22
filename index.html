@@ -293,6 +293,9 @@ a.admin-btn:hover { background-color: #b71c1c; }
   安装悠哉博客到设备
 </div>
 
+<!-- 音量调节滑块 -->
+<input type="range" id="volume-slider" min="0" max="100" value="100" style="position: fixed; bottom: 100px; right: 20px; z-index: 1000; width: 100px;">
+
 <!-- 右下角按钮 -->
 <button id="sound-toggle-btn">🔊 打开声音</button>
 <button id="mode-toggle-btn">🌙 夜晚模式</button>
@@ -306,7 +309,7 @@ a.admin-btn:hover { background-color: #b71c1c; }
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // Gitalk 初始化
+// Gitalk 初始化
   const gitalk = new Gitalk({
     clientID: 'Ov23lijfU0G3M7jiMFAW',
     clientSecret: '47120dd1810d3a2a9aa0033211f5ee73ef29baa3',
@@ -318,6 +321,18 @@ document.addEventListener('DOMContentLoaded', () => {
     language: 'zh-CN'
   });
   gitalk.render('gitalk-container');
+  
+  // 获取音量滑块元素
+  const volumeSlider = document.getElementById('volume-slider');
+
+  // 监听滑块的变化
+  volumeSlider.addEventListener('input', (event) => {
+    const volume = event.target.value;
+    if (livePlayer) {
+      livePlayer.setVolume(volume); // 设置 YouTube 播放器的音量
+    }
+  });
+});
 
   // 图片点击放大
   document.querySelectorAll('.gallery img').forEach(img => {
