@@ -31,9 +31,8 @@ jobs:
 
     - name: Generate WebAPK using Bubblewrap
       run: |
-        # 设置环境变量避免交互式安装 JDK
-        export BUBBLEWRAP_JDK=17
-        bubblewrap init https://www.fuchenyouzai.dpdns.org  # 替换为你的博客 URL
+        # 使用 --no-install-jdk 参数来跳过 JDK 安装
+        bubblewrap init https://www.fuchenyouzai.dpdns.org --no-install-jdk  # 替换为你的博客 URL
         bubblewrap build
 
     - name: Upload WebAPK as artifact
