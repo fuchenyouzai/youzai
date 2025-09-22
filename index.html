@@ -1,9 +1,3 @@
-好的，我会根据你的要求进行修改，并将其拆分为四个部分发送给你。首先，我会修改代码中的音量控制，使其能控制所有正在播放的内容，包括视频和音频。此外，"打开声音"和"关闭声音"按钮也会进行相应调整，能够控制所有正在播放内容的声音。
-
-这里是第一部分：
-
-第一部分：修改音量控制
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -12,8 +6,8 @@
 <title>悠哉的博客</title>
 
 <!-- SEO meta tags -->
-<meta name="description" content="悠哉的博客，分享生活、旅行、技术与兴趣的个人博客。">
-<meta name="keywords" content="博客, 生活, 技术, 旅行, 悠哉,youzai,fuchenyouzai,拂尘悠哉">
+  <meta name="description" content="悠哉的博客，分享生活、旅行、技术与兴趣的个人博客。">
+  <meta name="keywords" content="博客, 生活, 技术, 旅行, 悠哉,youzai,fuchenyouzai,拂尘悠哉">
 
 <!-- PWA Manifest -->
 <link rel="manifest" href="/manifest.json">
@@ -199,12 +193,13 @@ a.admin-btn:hover { background-color: #b71c1c; }
 </style>
 </head>
 <body>
+
 <header>
 <h1>悠哉的博客</h1>
 <p>分享我的生活与兴趣</p>
 </header>
-<main>
 
+<main>
 <article>
 <h2>悠哉的Telegram</h2>
 <a href="https://t.me/fuchenyouzaibot" target="_blank" class="telegram-btn">联系 Telegram</a>
@@ -224,6 +219,8 @@ a.admin-btn:hover { background-color: #b71c1c; }
 <!-- 直播频道容器 -->
 <div id="live-channel-feed" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;"></div>
 </article>
+
+
 
 <article>
 <h2>音乐分享</h2>
@@ -351,80 +348,8 @@ liveChannels.forEach(channel => {
   channelWrapper.appendChild(channelInfo);
   liveChannelFeed.appendChild(channelWrapper);
 });
-
-// 全局控制的音量和播放状态
-let allPlayers = []; // 所有播放的视频或音频
-let soundOn = true; // 默认音量开启
-
-// 获取所有 iframe（YouTube 播放器）和 audio 元素
-function collectAllPlayers() {
-  // 获取所有的 iframe 和 audio 元素
-  allPlayers = [];
-  
-  document.querySelectorAll('iframe').forEach(iframe => {
-    if (iframe.src.includes('youtube.com')) {
-      allPlayers.push(iframe); // 只收集 YouTube 视频
-    }
-  });
-
-  document.querySelectorAll('audio').forEach(audio => {
-    allPlayers.push(audio); // 收集所有音频元素
-  });
-}
-
-// 调整音量
-function setVolume(volume) {
-  allPlayers.forEach(player => {
-    if (player.tagName === 'IFRAME' && player.src.includes('youtube.com')) {
-      // 处理 YouTube 播放器音量
-      const iframe = player;
-      const videoId = iframe.src.split('/').pop().split('?')[0];
-      const ytPlayer = new YT.Player(videoId);
-      ytPlayer.setVolume(volume);
-    } else if (player.tagName === 'AUDIO') {
-      // 处理 audio 元素音量
-      player.volume = volume / 100;
-    }
-  });
-}
-
-// 切换音频是否开启
-function toggleSound() {
-  soundOn = !soundOn;
-  allPlayers.forEach(player => {
-    if (player.tagName === 'IFRAME' && player.src.includes('youtube.com')) {
-      const iframe = player;
-      const videoId = iframe.src.split('/').pop().split('?')[0];
-      const ytPlayer = new YT.Player(videoId);
-      if (soundOn) {
-        ytPlayer.unMute();
-      } else {
-        ytPlayer.mute();
-      }
-    } else if (player.tagName === 'AUDIO') {
-      player.muted = !soundOn;
-    }
-  });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  collectAllPlayers(); // 初始化播放器
-  const volumeSlider = document.getElementById('volume-slider');
-  const soundBtn = document.getElementById('sound-toggle-btn');
-  
-  // 音量滑块事件
-  volumeSlider.addEventListener('input', (event) => {
-    const volume = event.target.value;
-    setVolume(volume);
-  });
-
-  // 音量开关事件
-  soundBtn.addEventListener('click', () => {
-    toggleSound();
-    soundBtn.textContent = soundOn ? '🔇 关闭声音' : '🔊 打开声音';
-  });
-});
 </script>
+
 
 <!-- 安装按钮 -->
 <div id="install-btn">
@@ -447,9 +372,11 @@ document.addEventListener('DOMContentLoaded', () => {
 <!-- YouTube IFrame API -->
 <script src="https://www.youtube.com/iframe_api"></script>
 
+
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // Gitalk 初始化
+// Gitalk 初始化
   const gitalk = new Gitalk({
     clientID: 'Ov23lijfU0G3M7jiMFAW',
     clientSecret: '47120dd1810d3a2a9aa0033211f5ee73ef29baa3',
@@ -461,14 +388,16 @@ document.addEventListener('DOMContentLoaded', () => {
     language: 'zh-CN'
   });
   gitalk.render('gitalk-container');
-
+  
   // 获取音量滑块元素
   const volumeSlider = document.getElementById('volume-slider');
 
   // 监听滑块的变化
   volumeSlider.addEventListener('input', (event) => {
     const volume = event.target.value;
-    setVolume(volume); // 设置所有播放器的音量
+    if (livePlayer) {
+      livePlayer.setVolume(volume); // 设置 YouTube 播放器的音量
+    }
   });
 
   // 图片点击放大
@@ -584,7 +513,62 @@ document.addEventListener('DOMContentLoaded', () => {
       alert("当前浏览器不支持自动安装，请使用 Chrome 或 Edge 浏览器。");
     }
   });
+
 }); // DOMContentLoaded 结束
+
+
+
+
+
+// ===== YouTube Player API 初始化（YouTube直播） =====
+let livePlayer;
+let soundOn = false;
+
+function onYouTubeIframeAPIReady() {
+  const latestLiveID = 'fN9uYWCjQaw';
+  livePlayer = new YT.Player('live-player', {
+    videoId: latestLiveID,
+    playerVars: { autoplay: 1, mute: 1, controls: 1, modestbranding: 1 },
+    events: { 'onReady': (event) => { event.target.mute(); } }
+  });
+}
+
+// ===== 右下角声音开关按钮 =====
+const soundBtn = document.getElementById('sound-toggle-btn');
+soundBtn.addEventListener('click', () => {
+  if (!livePlayer) return;
+  if (soundOn) {
+    livePlayer.mute();
+    soundBtn.textContent = '🔊 打开声音';
+    soundOn = false;
+  } else {
+    livePlayer.unMute();
+    soundBtn.textContent = '🔇 关闭声音';
+    soundOn = true;
+  }
+});
+
+// ===== 白天/夜晚模式切换按钮 =====
+const modeBtn = document.getElementById('mode-toggle-btn');
+const currentMode = localStorage.getItem('theme') || 'light'; // 默认使用 'light' 模式
+if (currentMode === 'dark') {
+  document.body.classList.add('dark-mode');
+  modeBtn.textContent = "☀️ 白天模式";
+} else {
+  document.body.classList.remove('dark-mode');
+  modeBtn.textContent = "🌙 夜晚模式";
+}
+
+modeBtn.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+  if (document.body.classList.contains('dark-mode')) {
+    modeBtn.textContent = "☀️ 白天模式";
+    localStorage.setItem('theme', 'dark'); // 保存夜间模式
+  } else {
+    modeBtn.textContent = "🌙 夜晚模式";
+    localStorage.setItem('theme', 'light'); // 保存白天模式
+  }
+});
 </script>
 
 </body>
