@@ -25,7 +25,7 @@ jobs:
 
     - name: Generate WebAPK using Bubblewrap
       run: |
-        bubblewrap init https://your-blog-url.com  # 替换为你的博客网址
+        bubblewrap init https://www.fuchenyouzai.dpdns.org  # 替换为你的博客网址
         bubblewrap build
 
     - name: Upload WebAPK as artifact
