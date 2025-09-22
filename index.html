@@ -2,17 +2,27 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>悠哉的博客</title>
-<meta name="description" content="悠哉的博客，含视频、音乐、Telegram互动、天气日历，分享生活与兴趣的个人平台。">
-<meta name="keywords" content="悠哉,悠哉视频,一人一首经典曲,Telegram,天气,日历,博客">
+
+<!-- SEO meta tags -->
+  <meta name="description" content="悠哉的博客，分享生活、旅行、技术与兴趣的个人博客。">
+  <meta name="keywords" content="博客, 生活, 技术, 旅行, 悠哉,youzai,fuchenyouzai,拂尘悠哉">
+
+<!-- PWA Manifest -->
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#4CAF50">
+
+<!-- iOS 安装支持 -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="悠哉的博客">
 <link rel="apple-touch-icon" href="/icon-192.png">
+
+<!-- 设置 iOS 状态栏样式 -->
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
 <style>
+/* ===== 颜色变量 & 白天/夜晚模式 ===== */
 :root {
   --bg-color: #f4f4f4;
   --text-color: #333;
@@ -20,74 +30,88 @@
   --footer-bg: #333;
   --footer-text: #fff;
   --article-bg: #fff;
-  --control-bg: rgba(0,0,0,0.5);
-  --sidebar-bg: #f8f8f8;
-  --time-item-bg: #f0f0f0;
 }
 body.dark-mode {
   --bg-color: #1e1e1e;
   --text-color: #f4f4f4;
   --header-bg: #333;
   --footer-bg: #222;
+  --footer-text: #f4f4f4;
   --article-bg: #2a2a2a;
-  --sidebar-bg: #333;
-  --time-item-bg: #444;
 }
+
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
   font-family: "Helvetica Neue", Arial, sans-serif;
   margin: 0;
   padding: 0;
-  line-height: 1.6;
 }
+
 header {
   background-color: var(--header-bg);
   color: white;
   padding: 20px 10px;
   text-align: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-header h1 { margin: 0 0 10px 0; font-size: 24px; }
-header p { margin: 0; font-size: 16px; opacity: 0.9; }
-</style>
-<style>
+
 main {
-  max-width: 1200px;
+  max-width: 800px;
   margin: 20px auto;
   padding: 0 10px;
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
 }
-.left-content { flex: 3; min-width: 300px; }
-.right-sidebar { flex: 1; min-width: 280px; }
-.right-module {
-  background: var(--sidebar-bg);
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  margin-bottom: 15px;
-}
-.right-module h3 {
-  color: var(--header-bg);
-  margin: 0 0 10px 0;
-  font-size: 18px;
-}
-</style>
-<style>
+
 article {
   background: var(--article-bg);
+  color: var(--text-color);
   margin-bottom: 20px;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
-article h2 {
-  color: #4CAF50;
-  margin: 0 0 15px 0;
-  font-size: 22px;
+
+h2 { color: #4CAF50; }
+img { max-width: 100%; border-radius: 5px; cursor: pointer; transition: transform 0.3s; }
+iframe { width: 100%; border: none; border-radius: 5px; }
+audio { width: 100%; margin-top: 10px; }
+
+footer {
+  text-align: center;
+  padding: 15px;
+  background: var(--footer-bg);
+  color: var(--footer-text);
+  margin-top: 20px;
 }
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+.gallery img {
+  width: 48%; /* 横向展示，两张图片并排 */
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+.gallery img:hover {
+  transform: scale(1.05);
+}
+
+a.telegram-btn, a.admin-btn {
+  display: inline-block;
+  padding: 10px 15px;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+}
+a.telegram-btn { background-color: #0088cc; }
+a.telegram-btn:hover { background-color: #006699; }
+a.admin-btn { background-color: #e53935; }
+a.admin-btn:hover { background-color: #b71c1c; }
+
 .video-container, .article-video {
   position: relative;
   width: 100%;
@@ -97,7 +121,7 @@ article h2 {
   border-radius: 5px;
   margin: 10px 0;
 }
-.video-container iframe, .article-video iframe {
+.video-container iframe, .article-video iframe, .video-container #live-player {
   position: absolute;
   top: 0;
   left: 0;
@@ -105,112 +129,8 @@ article h2 {
   height: 100%;
   border: none;
 }
-img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-img:hover { transform: scale(1.05); }
-</style>
-<style>
-audio {
-  width: 100%;
-  margin-top: 10px;
-  border-radius: 5px;
-  outline: none;
-}
-.gallery {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 15px;
-}
-.gallery img { width: calc(50% - 5px); }
-@media screen and (max-width: 480px) { .gallery img { width: 100%; } }
-a.telegram-btn {
-  display: inline-block;
-  padding: 10px 15px;
-  color: white;
-  background-color: #0088cc;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-}
-a.telegram-btn:hover { background-color: #006699; }
-a.admin-btn {
-  display: inline-block;
-  padding: 10px 15px;
-  color: white;
-  background-color: #e53935;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-  margin-top: 10px;
-}
-a.admin-btn:hover { background-color: #b71c1c; }
-</style>
-<style>
-footer {
-  text-align: center;
-  padding: 15px;
-  background: var(--footer-bg);
-  color: var(--footer-text);
-  margin-top: 20px;
-  font-size: 14px;
-}
-/* 模式切换按钮：左下角 */
-#mode-toggle-btn {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  z-index: 1000;
-  padding: 12px 18px;
-  border-radius: 6px;
-  background: #555;
-  color: white;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  transition: background 0.3s ease, transform 0.2s ease;
-  border: none;
-}
-#mode-toggle-btn:hover { background: #333; transform: scale(1.05); }
-/* 全局音量控制：右下角 */
-#global-sound-control {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--control-bg);
-  padding: 10px 15px;
-  border-radius: 8px;
-}
-#global-sound-btn {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 6px;
-  background: #4CAF50;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-#global-sound-btn:hover { background: #388E3C; }
-#global-volume-slider {
-  width: 120px;
-  accent-color: #4CAF50;
-  cursor: pointer;
-}
-/* PWA安装按钮 */
+
+/* ===== 右上角安装按钮（圆形） ===== */
 #install-btn {
   position: fixed;
   top: 160px;
@@ -229,448 +149,710 @@ footer {
   text-align: center;
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  border: none;
+  transition: background-color 0.3s, transform 0.2s;
 }
-#install-btn:hover { background-color: #388E3C; transform: scale(1.05); }
-/* 小屏适配 */
+#install-btn:hover {
+  background-color: #388E3C;
+  transform: scale(1.05);
+}
 @media screen and (max-width: 768px) {
-  #install-btn { top: 100px; width: 70px; height: 70px; font-size: 13px; }
-  #global-sound-control { padding: 8px 12px; gap: 8px; }
-  #global-sound-btn { padding: 8px 12px; font-size: 13px; }
-  #global-volume-slider { width: 100px; }
+  #install-btn {
+    top: 100px;
+    width: 70px;
+    height: 70px;
+    font-size: 13px;
+  }
 }
-</style>
+
+/* ===== 右下角悬浮按钮（声音 & 模式） ===== */
+#sound-toggle-btn, #mode-toggle-btn {
+  position: fixed;
+  bottom: 20px;
+  z-index: 1000;
+  padding: 12px 18px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: background-color 0.3s, transform 0.2s;
+}
+#sound-toggle-btn {
+  right: 20px;
+  background-color: #e53935;
+  color: white;
+}
+#sound-toggle-btn:hover { background-color: #b71c1c; transform: scale(1.05); }
+
+#mode-toggle-btn {
+  right: 140px;
+  background-color: #555;
+  color: white;
+  font-size: 14px;
+}
+#mode-toggle-btn:hover { background-color: #333; transform: scale(1.05); }
 </style>
 </head>
 <body>
 <header>
-  <h1>悠哉的博客</h1>
-  <p>分享我的生活与兴趣，包含视频、音乐、直播与互动</p>
+<h1>悠哉的博客</h1>
+<p>分享我的生活与兴趣</p>
 </header>
-<main>
-  <section class="left-content">
-    <!-- 凤凰卫视直播 -->
-    <article>
-      <h2>凤凰卫视实时新闻直播</h2>
-      <div class="video-container">
-        <div id="live-player">直播加载中...</div>
-      </div>
-    </article>
-    <!-- YouTube直播频道 -->
-    <article>
-      <h2>YouTube直播频道</h2>
-      <div id="live-channel-feed" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;"></div>
-    </article>
-    <!-- 一人一首经典曲 -->
-    <article id="classic-music">
-      <h2>一人一首经典曲</h2>
-      <div class="video-container">
-        <iframe id="classic-music-iframe" src="https://www.youtube.com/embed/WbW00ghKFt0?enablejsapi=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      </div>
-    </article>
-    <!-- 悠哉博文 -->
-    <article>
-      <h2>悠哉博文</h2>
-      <p>这是我的第一篇博客文章，欢迎大家来到我的博客！我会分享生活日常、技术心得、旅行见闻和各种有趣的内容，希望能和大家多多交流。</p>
-      <div class="gallery">
-        <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="悠哉生活照1">
-        <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t4.jpg" alt="悠哉生活照2">
-      </div>
-    </article>
-    <!-- 悠哉视频 -->
-    <article id="youzai-video">
-      <h2>悠哉视频</h2>
-      <p>分享我的日常照片和生活短视频，记录美好瞬间</p>
-      <div class="article-video">
-        <iframe id="youzai-video-iframe" src="https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1" title="黄石公园短视频" allowfullscreen></iframe>
-      </div>
-    </article>
-    <!-- mp3音乐 -->
-    <article id="mp3-music">
-      <h2>mp3音乐</h2>
-      <p>这是我最近发现的一首好听的音乐，大家可以试听放松一下～</p>
-      <audio id="mp3-player" controls preload="auto" controlsList="nodownload">
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-        您的浏览器不支持音频播放，请更新浏览器后重试。
-       ></audio>
-    </article>
-    <!-- 悠哉相册 -->
-    <article>
-      <h2>悠哉相册</h2>
-      <div class="gallery">
-        <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="相册图片1">
-        <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t4.jpg" alt="相册图片2">
-        <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="相册图片3">
-        <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t4.jpg" alt="相册图片4">
-      </div>
-    </article>
-    <!-- 悠哉YouTube -->
-    <article>
-      <h2>悠哉YouTube</h2>
-      <a href="https://www.youtube.com/@拂尘悠哉" target="_blank" class="telegram-btn">访问悠哉YouTube频道</a>
-      <div id="youtube-feed" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; margin-top:10px;"></div>
-    </article>
-    <!-- Gitalk留言板 -->
-    <article>
-      <h2>悠哉留言板Gitalk</h2>
-      <div id="gitalk-container"></div>
-      <a href="https://github.com/fuchenyouzai/youzai/issues" target="_blank" class="admin-btn">查看GitHub后台评论</a>
-    </article>
-    <!-- Disqus留言板 -->
-    <article>
-      <h2>悠哉留言板Disqus</h2>
-      <div id="disqus_thread"></div>
-      <script>(function() { var d = document, s = d.createElement('script'); s.src = 'https://youzaibolg.disqus.com/embed.js'; s.setAttribute('data-timestamp', +new Date()); (d.head || d.body).appendChild(s); })();</script>
-    </article>
-  </section>
-  <section class="right-sidebar">
-    <!-- Telegram模块：横向布局 -->
-    <div class="right-module" id="telegram-module">
-      <h3>悠哉Telegram</h3>
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <a href="https://t.me/fuchenyouzaibot" target="_blank" class="telegram-btn" style="width: 100%; box-sizing: border-box; text-align: center;">联系悠哉Telegram</a>
-        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-          <img src="https://picsum.photos/100/100" alt="Telegram二维码" style="width: 100px; height: 100px; flex-shrink: 0;">
-          <p style="margin: 0; flex: 1; min-width: 150px;">扫码或点击按钮，加入悠哉互动社群，获取最新更新通知～</p>
-        </div>
-      </div>
-    </div>
-    <!-- 全球时间模块：横向布局 -->
-    <div class="right-module" id="time-display-module">
-      <h3>全球时间（精确到毫秒）</h3>
-      <div style="display: flex; flex-wrap: wrap; gap: 8px; width: 100%;">
-        <div style="background:var(--time-item-bg); padding:8px; border-radius:5px; flex: 1; min-width: 120px; text-align: center;">
-          <span style="font-weight:bold;">UTC</span><br>
-          <span id="utc-time">00:00:00.000</span>
-        </div>
-        <div style="background:var(--time-item-bg); padding:8px; border-radius:5px; flex: 1; min-width: 120px; text-align: center;">
-          <span style="font-weight:bold;">香港</span><br>
-          <span id="hongkong-time">08:00:00.000</span>
-        </div>
-        <div style="background:var(--time-item-bg); padding:8px; border-radius:5px; flex: 1; min-width: 120px; text-align: center;">
-          <span style="font-weight:bold;">洛杉矶</span><br>
-          <span id="losangeles-time">16:00:00.000</span>
-        </div>
-        <div style="background:var(--time-item-bg); padding:8px; border-radius:5px; flex: 1; min-width: 120px; text-align: center;">
-          <span style="font-weight:bold;">纽约</span><br>
-          <span id="newyork-time">19:00:00.000</span>
-        </div>
-      </div>
-    </div>
-    <!-- 本地天气和日历模块：横向布局 -->
-    <div class="right-module" id="weather-calendar-module">
-      <h3>本地天气与日历</h3>
-      <div style="display: flex; flex-wrap: wrap; gap: 8px; width: 100%;">
-        <div style="background:var(--time-item-bg); padding:8px; border-radius:5px; flex: 2; min-width: 180px;">
-          <div id="local-weather">天气数据加载中...</div>
-        </div>
-        <div style="background:var(--time-item-bg); padding:8px; border-radius:5px; flex: 1; min-width: 120px; text-align: center;">
-          <span style="font-weight:bold;">公历</span><br>
-          <span id="gregorian-date">2024年05月01日</span>
-        </div>
-        <div style="background:var(--time-item-bg); padding:8px; border-radius:5px; flex: 1; min-width: 120px; text-align: center;">
-          <span style="font-weight:bold;">农历</span><br>
-          <span id="lunar-date">甲辰年三月廿四</span>
-        </div>
-        <div style="background:var(--time-item-bg); padding:8px; border-radius:5px; flex: 1; min-width: 80px; text-align: center;">
-          <span style="font-weight:bold;">星期</span><br>
-          <span id="weekday">星期三</span>
-        </div>
-        <div style="background:var(--time-item-bg); padding:8px; border-radius:5px; flex: 1; min-width: 80px; text-align: center;">
-          <span style="font-weight:bold;">生肖</span><br>
-          <span id="chinese-zodiac">龙</span>
-        </div>
-      </div>
-    </div>
-  </section>
-</main>
-<footer>
-&copy; 2026 悠哉的博客 - 保留所有权利
-</footer>
 
-<!-- PWA安装按钮 -->
+<main>
+<article>
+<h2>悠哉的Telegram</h2>
+<a href="https://t.me/fuchenyouzaibot" target="_blank" class="telegram-btn">联系 Telegram</a>
+</article>	
+	
+<!-- 文章内容 -->
+<article>
+<h2>YouTube直播</h2>
+<p>凤凰卫视实时新闻直播</p>
+<div class="video-container">
+  <div id="live-player">加载中...</div>
+</div>
+</article>
+
+<article>
+<h2>直播频道</h2>
+<!-- 直播频道容器 -->
+<div id="live-channel-feed" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;"></div>
+</article>
+
+<article>
+<h2>音乐分享</h2>
+<p>一人一首经典曲✌︎˶╹ꇴ╹˶✌︎ </p>
+<div class="video-container">
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/WbW00ghKFt0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+</article>
+
+<article>
+<h2>我的第一篇博文</h2>
+<p>这是我的第一篇博客文章，欢迎大家来到我的博客！我会分享生活、技术、旅行和各种有趣的内容。</p>
+<!-- 横向展示两张图片 -->
+<div class="gallery">
+  <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="图片1">
+  <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t4.jpg" alt="图片2">
+</div>
+</article>
+
+<article>
+  <h2>旅行见闻</h2>
+  <p>照片和视频分享</p>
+  <div class="article-video">
+    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="黄石公园短视频" allowfullscreen></iframe>
+  </div>
+</article>
+
+<article>
+  <h2>音乐分享</h2>
+  <p>这是我最近发现 的一首音乐，大家可以试听。</p>
+  <audio controls preload="auto" controlsList="nodownload">
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    您的浏览器不支持音频播放。
+  </audio>
+</article>
+
+<article>
+<h2>悠哉(„• ֊ •„)੭</h2>
+<div class="gallery">
+<img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="图片1">
+<img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t4.jpg" alt="图片3">
+</div>
+</article>
+
+<article>
+<h2>悠哉的YouTube</h2>
+<a href="https://www.youtube.com/@拂尘悠哉" target="_blank" class="telegram-btn">访问 YouTube</a>
+<div id="youtube-feed" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; margin-top:10px;"></div>
+</article>
+
+<article>
+<h2>悠哉的留言板（Gitalk）</h2>
+<div id="gitalk-container"></div>
+<a href="https://github.com/fuchenyouzai/youzai/issues" target="_blank" class="admin-btn" style="margin-top:10px;">查看 GitHub 后台评论</a>
+</article>
+
+<article>
+<h2>悠哉的留言板（Disqus 中文）</h2>
+<div id="disqus_thread"></div>
+<script>
+(function() { 
+    var d = document, s = d.createElement('script');
+    s.src = 'https://youzaibolg.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+})();
+</script>
+</article>
+
+</main>
+
+<footer>
+&copy; 2026 悠哉的博客
+</footer>
+<!-- 安装按钮 -->
 <div id="install-btn">
   安装悠哉博客到设备
 </div>
 
-<!-- 模式切换按钮（左下角） -->
+<!-- 右下角按钮 -->
+<button id="sound-toggle-btn">🔊 打开声音</button>
 <button id="mode-toggle-btn">🌙 夜晚模式</button>
 
-<!-- 全局音量控制（右下角） -->
-<div id="global-sound-control">
-  <button id="global-sound-btn">🔊 全局有声</button>
-  <input type="range" id="global-volume-slider" min="0" max="100" value="100">
+<!-- 新增：左下角全局声音控制按钮（含音量滑块） -->
+<div id="global-sound-control" style="position: fixed; bottom: 20px; left: 20px; z-index: 1000; display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.5); padding: 8px 12px; border-radius: 8px;">
+  <!-- 全局声音开关按钮 -->
+  <button id="global-sound-btn" style="padding: 8px 12px; border: none; border-radius: 6px; background-color: #4CAF50; color: white; font-weight: bold; cursor: pointer; transition: background 0.3s;">🔊 全局有声</button>
+  <!-- 全局音量滑块 -->
+  <div style="display: flex; align-items: center; gap: 5px;">
+    <span style="color: white; font-size: 14px;">音量</span>
+    <input type="range" id="global-volume-slider" min="0" max="100" value="100" style="width: 100px; accent-color: #4CAF50; cursor: pointer;">
+  </div>
 </div>
+
+<!-- 原有：右侧音量滑块区域 -->
+<div style="position: fixed; bottom: 100px; right: 20px; z-index: 1000; display: flex; align-items: center;">
+  <span style="color: white; margin-right: 10px; background-color: rgba(0, 0, 0, 0.5); padding: 3px 6px; border-radius: 4px;">音量</span>
+  <input type="range" id="volume-slider" min="0" max="100" value="100" style="width: 100px;">
+</div>
+
+<!-- 外部资源引入（保留原结构） -->
+<!-- Gitalk -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
 <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+<!-- YouTube IFrame API -->
 <script src="https://www.youtube.com/iframe_api"></script>
-<script src="https://cdn.jsdelivr.net/npm/lunar.js@1.0.0/dist/lunar.min.js"></script>
 <script>
-// 全局媒体控制变量：管理所有音频/视频
-window.globalMedia = {
-  elements: {
-    audio: document.getElementById('mp3-player'),
-    youtube: {
-      live: null,
-      classic: document.getElementById('classic-music-iframe'),
-      youzai: document.getElementById('youzai-video-iframe')
-    }
-  },
-  isMuted: false,
-  volume: 1.0 // 0.0-1.0
-};
+// 直播频道数组，每个元素是一个直播的 ID 和标题
+const liveChannels = [
+  {id: "fN9uYWCjQaw", title: "凤凰卫视直播"},
+  {id: "ZB9QSD_SWmM", title: "科技新闻直播"},
+  {id: "WbW00ghKFt0", title: "娱乐直播"}
+];
+
+// 获取直播频道展示容器
+const liveChannelFeed = document.getElementById("live-channel-feed");
+
+// 动态生成每个频道的直播播放器
+liveChannels.forEach(channel => {
+  const channelWrapper = document.createElement("div");
+  channelWrapper.style.display = "flex";
+  channelWrapper.style.flexDirection = "column";
+  channelWrapper.style.gap = "5px";
+
+  // 创建 iframe 容器
+  const iframeWrapper = document.createElement("div");
+  iframeWrapper.style.position = "relative";
+  iframeWrapper.style.width = "100%";
+  iframeWrapper.style.height = 0;
+  iframeWrapper.style.overflow = "hidden";
+  iframeWrapper.style.borderRadius = "5px";
+  iframeWrapper.style.paddingBottom = "56.25%"; // 16:9比例
+  
+  // 新增：为iframe添加enablejsapi=1，支持YouTube API控制
+  iframeWrapper.innerHTML = `<iframe src="https://www.youtube.com/embed/${channel.id}?enablejsapi=1" 
+                              style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"
+                              title="${channel.title}" 
+                              allowfullscreen
+                              id="live-iframe-${channel.id}"></iframe>`;
+
+  // 创建频道信息
+  const channelInfo = document.createElement("div");
+  channelInfo.style.display = "flex";
+  channelInfo.style.flexDirection = "column";
+  channelInfo.style.alignItems = "center";
+  channelInfo.style.gap = "5px";
+
+  const titleElement = document.createElement("p");
+  titleElement.textContent = channel.title;
+  titleElement.style.textAlign = "center";
+  titleElement.style.margin = "0";
+  titleElement.style.fontWeight = "bold";
+  titleElement.style.fontSize = "14px";
+
+  channelInfo.appendChild(titleElement);
+
+  // 将生成的 iframe 和频道信息加入页面
+  channelWrapper.appendChild(iframeWrapper);
+  channelWrapper.appendChild(channelInfo);
+  liveChannelFeed.appendChild(channelWrapper);
+
+  // 新增：监听iframe加载，获取播放器实例并加入全局控制
+  const iframe = document.getElementById(`live-iframe-${channel.id}`);
+  iframe.onload = () => {
+    setTimeout(() => {
+      const player = new YT.Player(`live-iframe-${channel.id}`, {
+        events: {
+          'onReady': (event) => {
+            // 初始化全局播放器数组（若未存在）
+            if (!window.globalYoutubePlayers) window.globalYoutubePlayers = [];
+            // 将播放器实例加入全局列表
+            if (!window.globalYoutubePlayers.includes(event.target)) {
+              window.globalYoutubePlayers.push(event.target);
+            }
+            // 同步初始状态（静音+音量）
+            event.target.mute();
+            const globalSlider = document.getElementById('global-volume-slider');
+            if (globalSlider) event.target.setVolume(globalSlider.value);
+          }
+        }
+      });
+    }, 500);
+  };
+});
 </script>
 <script>
-// YouTube播放器初始化：获取实例并绑定音量控制
+document.addEventListener('DOMContentLoaded', () => {
+  // 新增：1. 收集所有画廊图片 & 初始化当前索引
+  const galleryImages = Array.from(document.querySelectorAll('.gallery img'));
+  let currentImageIndex = 0;
+
+  // 新增：2. 图片切换核心函数（更新放大层图片）
+  function updateOverlayImage(index) {
+    const overlayImg = document.querySelector('.image-overlay img');
+    if (overlayImg && galleryImages[index]) {
+      overlayImg.src = galleryImages[index].src;
+      overlayImg.alt = galleryImages[index].alt || `图片${index + 1}`;
+    }
+    currentImageIndex = index; // 更新当前索引
+  }
+
+  // 新增：3. 上一张/下一张切换函数（支持循环）
+  function showPrevImage() {
+    let newIndex = currentImageIndex - 1;
+    newIndex = newIndex < 0 ? galleryImages.length - 1 : newIndex; // 循环到最后一张
+    updateOverlayImage(newIndex);
+  }
+  function showNextImage() {
+    let newIndex = currentImageIndex + 1;
+    newIndex = newIndex >= galleryImages.length ? 0 : newIndex; // 循环到第一张
+    updateOverlayImage(newIndex);
+  }
+
+  // 原有：全局声音控制初始化（保留）
+  window.globalAudioElements = Array.from(document.querySelectorAll('audio'));
+  window.isGlobalSoundOn = false;
+  const globalSoundBtn = document.getElementById('global-sound-btn');
+  const globalVolumeSlider = document.getElementById('global-volume-slider');
+
+  window.globalAudioElements.forEach(audio => {
+    audio.muted = !window.isGlobalSoundOn;
+    audio.volume = globalVolumeSlider.value / 100;
+  });
+
+  // 原有：Gitalk 初始化（保留）
+  const gitalk = new Gitalk({
+    clientID: 'Ov23lijfU0G3M7jiMFAW',
+    clientSecret: '47120dd1810d3a2a9aa0033211f5ee73ef29baa3',
+    repo: 'youzai',
+    owner: 'fuchenyouzai',
+    admin: ['fuchenyouzai'],
+    id: location.pathname,
+    distractionFreeMode: false,
+    language: 'zh-CN'
+  });
+  gitalk.render('gitalk-container');
+  
+  // 原有：音量滑块同步逻辑（保留）
+  const volumeSlider = document.getElementById('volume-slider');
+  volumeSlider.addEventListener('input', (event) => {
+    const volume = event.target.value;
+    if (window.livePlayer) window.livePlayer.setVolume(volume);
+    if (globalVolumeSlider) globalVolumeSlider.value = volume;
+    if (window.syncGlobalVolume) window.syncGlobalVolume(volume);
+  });
+
+  // 重写：4. 图片点击放大逻辑（替换原逻辑，支持滑动+按钮）
+  galleryImages.forEach((img, index) => {
+    img.addEventListener('click', () => {
+      currentImageIndex = index; // 记录当前点击图片索引
+
+      // 创建放大层容器（带类名方便样式控制）
+      const overlay = document.createElement('div');
+      overlay.className = 'image-overlay';
+      overlay.style.position = 'fixed';
+      overlay.style.top = 0;
+      overlay.style.left = 0;
+      overlay.style.width = '100%';
+      overlay.style.height = '100%';
+      overlay.style.background = 'rgba(0,0,0,0.9)';
+      overlay.style.display = 'flex';
+      overlay.style.flexDirection = 'column';
+      overlay.style.justifyContent = 'center';
+      overlay.style.alignItems = 'center';
+      overlay.style.cursor = 'default';
+      overlay.style.zIndex = '9999';
+      overlay.style.padding = '20px';
+      overlay.style.boxSizing = 'border-box';
+
+      // 新增：上一张按钮
+      const prevBtn = document.createElement('button');
+      prevBtn.textContent = '← 上一张';
+      prevBtn.style.position = 'absolute';
+      prevBtn.style.left = '20px';
+      prevBtn.style.padding = '10px 15px';
+      prevBtn.style.backgroundColor = 'rgba(255,255,255,0.2)';
+      prevBtn.style.color = 'white';
+      prevBtn.style.border = 'none';
+      prevBtn.style.borderRadius = '5px';
+      prevBtn.style.fontSize = '16px';
+      prevBtn.style.cursor = 'pointer';
+      prevBtn.style.zIndex = '10';
+      prevBtn.style.transition = 'background 0.3s';
+      prevBtn.addEventListener('mouseover', () => prevBtn.style.backgroundColor = 'rgba(255,255,255,0.4)');
+      prevBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // 阻止关闭放大层
+        showPrevImage();
+      });
+
+      // 新增：下一张按钮
+      const nextBtn = document.createElement('button');
+      nextBtn.textContent = '下一张 →';
+      nextBtn.style.position = 'absolute';
+      nextBtn.style.right = '20px';
+      nextBtn.style.padding = '10px 15px';
+      nextBtn.style.backgroundColor = 'rgba(255,255,255,0.2)';
+      nextBtn.style.color = 'white';
+      nextBtn.style.border = 'none';
+      nextBtn.style.borderRadius = '5px';
+      nextBtn.style.fontSize = '16px';
+      nextBtn.style.cursor = 'pointer';
+      nextBtn.style.zIndex = '10';
+      nextBtn.style.transition = 'background 0.3s';
+      nextBtn.addEventListener('mouseover', () => nextBtn.style.backgroundColor = 'rgba(255,255,255,0.4)');
+      nextBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // 阻止关闭放大层
+        showNextImage();
+      });
+      // 新增：关闭按钮
+      const closeBtn = document.createElement('button');
+      closeBtn.textContent = '× 关闭';
+      closeBtn.style.position = 'absolute';
+      closeBtn.style.top = '20px';
+      closeBtn.style.padding = '8px 12px';
+      closeBtn.style.backgroundColor = 'rgba(255,0,0,0.6)';
+      closeBtn.style.color = 'white';
+      closeBtn.style.border = 'none';
+      closeBtn.style.borderRadius = '5px';
+      closeBtn.style.fontSize = '16px';
+      closeBtn.style.cursor = 'pointer';
+      closeBtn.style.zIndex = '10';
+      closeBtn.style.transition = 'background 0.3s';
+      closeBtn.addEventListener('mouseover', () => closeBtn.style.backgroundColor = 'rgba(255,0,0,0.8)');
+      closeBtn.addEventListener('click', () => {
+        document.body.removeChild(overlay);
+        document.removeEventListener('keydown', handleKeyDown); // 移除键盘监听
+      });
+
+      // 放大图片元素
+      const overlayImg = document.createElement('img');
+      overlayImg.src = img.src;
+      overlayImg.alt = img.alt || `图片${index + 1}`;
+      overlayImg.style.maxWidth = '90%';
+      overlayImg.style.maxHeight = '80%';
+      overlayImg.style.borderRadius = '5px';
+      overlayImg.style.objectFit = 'contain'; // 保证图片不拉伸
+
+      // 组装放大层
+      overlay.appendChild(prevBtn);
+      overlay.appendChild(nextBtn);
+      overlay.appendChild(closeBtn);
+      overlay.appendChild(overlayImg);
+
+      // 点击空白处关闭
+      overlay.addEventListener('click', () => {
+        document.body.removeChild(overlay);
+        document.removeEventListener('keydown', handleKeyDown);
+      });
+
+      // 新增：移动端触摸滑动支持
+      let startX = 0;
+      overlay.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX; // 记录触摸起始位置
+      });
+      overlay.addEventListener('touchend', (e) => {
+        if (!e.changedTouches[0]) return;
+        const endX = e.changedTouches[0].clientX;
+        const diffX = endX - startX; // 计算滑动距离
+        if (diffX > 50) showPrevImage(); // 右滑→上一张
+        if (diffX < -50) showNextImage(); // 左滑→下一张
+      });
+
+      // 新增：PC端键盘方向键控制
+      function handleKeyDown(e) {
+        if (e.key === 'ArrowLeft') showPrevImage(); // 左箭头→上一张
+        if (e.key === 'ArrowRight') showNextImage(); // 右箭头→下一张
+        if (e.key === 'Escape') { // ESC键→关闭
+          document.body.removeChild(overlay);
+          document.removeEventListener('keydown', handleKeyDown);
+        }
+      }
+      document.addEventListener('keydown', handleKeyDown);
+
+      // 加入页面
+      document.body.appendChild(overlay);
+    });
+  });
+
+  // 原有：YouTube视频墙逻辑（保留，无修改）
+  const videos = [
+    {id: "ZB9QSD_SWmM", type: "shorts", title: "最新 Shorts 视频"},
+    {id: "ZB9QSD_SWmM", type: "shorts", title: "示例视频 1"},
+    {id: "ZB9QSD_SWmM", type: "shorts", title: "示例视频 2"},
+    {id: "ZB9QSD_SWmM", type: "video", title: "示例视频 2"},
+    {id: "ZB9QSD_SWmM", type: "video", title: "示例视频 2"},
+    {id: "ZB9QSD_SWmM", type: "video", title: "示例视频 2"}
+  ];
+  const feedContainer = document.getElementById("youtube-feed");
+  if (feedContainer) {
+    videos.forEach((v, index) => {
+      const wrapper = document.createElement("div");
+      wrapper.style.display = "flex";
+      wrapper.style.flexDirection = "column";
+      wrapper.style.gap = "5px";
+
+      const iframeWrapper = document.createElement("div");
+      iframeWrapper.style.position = "relative";
+      iframeWrapper.style.width = "100%";
+      iframeWrapper.style.height = 0;
+      iframeWrapper.style.overflow = "hidden";
+      iframeWrapper.style.borderRadius = "5px";
+      iframeWrapper.style.paddingBottom = v.type === "shorts" ? "177.78%" : "56.25%";
+      const iframeId = `video-iframe-${index}`;
+      iframeWrapper.innerHTML = `<iframe src="https://www.youtube.com/embed/${v.id}?enablejsapi=1" 
+              style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"
+              title="${v.title}" 
+              allowfullscreen
+              id="${iframeId}"></iframe>`;
+
+      const infoDiv = document.createElement("div");
+      infoDiv.style.display = "flex";
+      infoDiv.style.flexDirection = "column";
+      infoDiv.style.alignItems = "center";
+      infoDiv.style.gap = "5px";
+
+      const titleEl = document.createElement("p");
+      titleEl.textContent = v.title;
+      titleEl.style.textAlign = "center";
+      titleEl.style.margin = "0";
+      titleEl.style.fontWeight = "bold";
+      titleEl.style.fontSize = "14px";
+
+      const btn = document.createElement("a");
+      btn.href = `https://www.youtube.com/watch?v=${v.id}`;
+      btn.target = "_blank";
+      btn.textContent = "在 YouTube 上观看";
+      btn.style.display = "inline-block";
+      btn.style.padding = "5px 10px";
+      btn.style.backgroundColor = "#ff0000";
+      btn.style.color = "#fff";
+      btn.style.borderRadius = "4px";
+      btn.style.fontSize = "12px";
+      btn.style.textDecoration = "none";
+
+      infoDiv.appendChild(titleEl);
+      infoDiv.appendChild(btn);
+      wrapper.appendChild(iframeWrapper);
+      wrapper.appendChild(infoDiv);
+      feedContainer.appendChild(wrapper);
+
+      const videoIframe = document.getElementById(iframeId);
+      videoIframe.onload = () => {
+        setTimeout(() => {
+          const player = new YT.Player(iframeId, {
+            events: {
+              'onReady': (event) => {
+                if (!window.globalYoutubePlayers) window.globalYoutubePlayers = [];
+                if (!window.globalYoutubePlayers.includes(event.target)) {
+                  window.globalYoutubePlayers.push(event.target);
+                }
+                event.target.mute();
+                if (globalVolumeSlider) event.target.setVolume(globalVolumeSlider.value);
+              }
+            }
+          });
+        }, 500);
+      };
+    });
+  }
+  // 原有：PWA Service Worker 注册（保留）
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then(registration => console.log('Service Worker 注册成功:', registration.scope))
+      .catch(err => console.log('Service Worker 注册失败:', err));
+  }
+
+  // 原有：全局音量同步函数（保留）
+  window.syncGlobalVolume = function(volume) {
+    if (window.globalAudioElements) {
+      window.globalAudioElements.forEach(audio => {
+        if (audio) audio.volume = volume / 100;
+      });
+    }
+    if (window.globalYoutubePlayers) {
+      window.globalYoutubePlayers.forEach(player => {
+        if (player && typeof player.setVolume === 'function') {
+          player.setVolume(volume);
+        }
+      });
+    }
+    if (window.livePlayer) {
+      window.livePlayer.setVolume(volume);
+    }
+  };
+
+  // 原有：全局声音开关函数（保留）
+  window.toggleGlobalSound = function() {
+    window.isGlobalSoundOn = !window.isGlobalSoundOn;
+    if (globalSoundBtn) {
+      globalSoundBtn.textContent = window.isGlobalSoundOn ? '🔇 全局静音' : '🔊 全局有声';
+    }
+    if (window.globalAudioElements) {
+      window.globalAudioElements.forEach(audio => {
+        if (audio) audio.muted = !window.isGlobalSoundOn;
+      });
+    }
+    if (window.globalYoutubePlayers) {
+      window.globalYoutubePlayers.forEach(player => {
+        if (player && typeof player.mute === 'function' && typeof player.unMute === 'function') {
+          window.isGlobalSoundOn ? player.unMute() : player.mute();
+        }
+      });
+    }
+    if (window.livePlayer) {
+      window.isGlobalSoundOn ? window.livePlayer.unMute() : window.livePlayer.mute();
+    }
+    const originalSoundBtn = document.getElementById('sound-toggle-btn');
+    if (originalSoundBtn) {
+      const originalIsOn = originalSoundBtn.textContent.includes('关闭');
+      if (originalIsOn !== window.isGlobalSoundOn) {
+        originalSoundBtn.click();
+      }
+    }
+  };
+
+  // 原有：PWA安装按钮逻辑（保留）
+  const installBtn = document.getElementById('install-btn');
+  let deferredPrompt;
+  const isEdge = /Edg/i.test(navigator.userAgent);
+  const isChrome = /Chrome/i.test(navigator.userAgent) && !isEdge;
+
+  if (isChrome) {
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+    });
+  }
+
+  installBtn.addEventListener('click', async () => {
+    if (isChrome) {
+      if (!deferredPrompt) { alert("PWA 安装条件未满足，或已安装"); return; }
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+    } else if (isEdge) {
+      alert("请通过浏览器菜单选择“点添加到手机或点安装或点创建快捷方式”来安装到手机或电脑或平板中使用。");
+    } else {
+      alert("当前浏览器不支持自动安装，请使用 Chrome 或 Edge 浏览器。");
+    }
+  });
+
+  // 原有：绑定全局控制按钮事件（保留）
+  if (globalSoundBtn) {
+    globalSoundBtn.addEventListener('click', window.toggleGlobalSound);
+  }
+  if (globalVolumeSlider) {
+    globalVolumeSlider.addEventListener('input', (e) => {
+      const volume = e.target.value;
+      window.syncGlobalVolume(volume);
+    });
+  }
+
+}); // DOMContentLoaded 结束
+</script>
+<script>
+// 原有：YouTube Player API 初始化相关变量（新增全局挂载）
+window.livePlayer;
+window.soundOn = false;
+
+// 原有：onYouTubeIframeAPIReady函数（新增主播放器加入全局控制）
 function onYouTubeIframeAPIReady() {
-  // 直播播放器
-  window.globalMedia.elements.youtube.live = new YT.Player('live-player', {
-    videoId: 'fN9uYWCjQaw',
-    playerVars: { autoplay: 1, mute: 1, controls: 1 },
-    events: {
-      onReady: function(e) {
-        e.target.setVolume(window.globalMedia.volume * 100);
-        e.target.mute();
-        window.globalMedia.isMuted = true;
-      }
-    }
-  });
-
-  // 经典曲播放器
-  window.globalMedia.elements.youtube.classic = new YT.Player('classic-music-iframe', {
-    events: {
-      onReady: function(e) {
-        e.target.setVolume(window.globalMedia.volume * 100);
-        e.target.mute();
-      }
-    }
-  });
-
-  // 悠哉视频播放器
-  window.globalMedia.elements.youtube.youzai = new YT.Player('youzai-video-iframe', {
-    events: {
-      onReady: function(e) {
-        e.target.setVolume(window.globalMedia.volume * 100);
-        e.target.mute();
-      }
+  const latestLiveID = 'fN9uYWCjQaw';
+  window.livePlayer = new YT.Player('live-player', {
+    videoId: latestLiveID,
+    playerVars: { autoplay: 1, mute: 1, controls: 1, modestbranding: 1 },
+    events: { 
+      'onReady': (event) => { 
+        event.target.mute(); 
+        // 新增：将主直播播放器加入全局列表
+        if (!window.globalYoutubePlayers) window.globalYoutubePlayers = [];
+        if (!window.globalYoutubePlayers.includes(event.target)) {
+          window.globalYoutubePlayers.push(event.target);
+        }
+        // 同步全局音量
+        const globalSlider = document.getElementById('global-volume-slider');
+        if (globalSlider) event.target.setVolume(globalSlider.value);
+      } 
     }
   });
 }
-</script>
-<script>
-// 全局静音/有声切换
-document.getElementById('global-sound-btn').addEventListener('click', function() {
-  window.globalMedia.isMuted = !window.globalMedia.isMuted;
-  const btnText = window.globalMedia.isMuted ? '🔊 全局有声' : '🔇 全局静音';
-  this.textContent = btnText;
 
-  // 控制原生音频
-  const audio = window.globalMedia.elements.audio;
-  if (audio) audio.muted = window.globalMedia.isMuted;
-
-  // 控制YouTube视频
-  const ytPlayers = window.globalMedia.elements.youtube;
-  for (const key in ytPlayers) {
-    const player = ytPlayers[key];
-    if (player && player.setVolume) {
-      window.globalMedia.isMuted ? player.mute() : player.unMute();
+// 原有：右下角声音开关按钮（保留原逻辑，与全局控制联动）
+const soundBtn = document.getElementById('sound-toggle-btn');
+soundBtn.addEventListener('click', () => {
+  if (!window.livePlayer) return;
+  window.soundOn = !window.soundOn;
+  // 更新原有按钮文字
+  soundBtn.textContent = window.soundOn ? '🔇 关闭声音' : '🔊 打开声音';
+  // 同步主直播播放器
+  window.soundOn ? window.livePlayer.unMute() : window.livePlayer.mute();
+  // 同步全局状态与其他音频/视频
+  if (window.isGlobalSoundOn !== window.soundOn) {
+    window.isGlobalSoundOn = window.soundOn;
+    const globalSoundBtn = document.getElementById('global-sound-btn');
+    if (globalSoundBtn) {
+      globalSoundBtn.textContent = window.soundOn ? '🔇 全局静音' : '🔊 全局有声';
+    }
+    // 同步原生音频与其他YouTube播放器
+    if (window.globalAudioElements) {
+      window.globalAudioElements.forEach(audio => {
+        if (audio) audio.muted = !window.soundOn;
+      });
+    }
+    if (window.globalYoutubePlayers) {
+      window.globalYoutubePlayers.forEach(player => {
+        if (player !== window.livePlayer && player && typeof player.mute === 'function' && typeof player.unMute === 'function') {
+          window.soundOn ? player.unMute() : player.mute();
+        }
+      });
     }
   }
 });
 
-// 全局音量调节
-document.getElementById('global-volume-slider').addEventListener('input', function() {
-  const volume = this.value / 100;
-  window.globalMedia.volume = volume;
-
-  // 控制原生音频
-  const audio = window.globalMedia.elements.audio;
-  if (audio) audio.volume = volume;
-
-  // 控制YouTube视频
-  const ytPlayers = window.globalMedia.elements.youtube;
-  for (const key in ytPlayers) {
-    const player = ytPlayers[key];
-    if (player && player.setVolume) {
-      player.setVolume(volume * 100);
-    }
-  }
-});
-</script>
-<script>
-// 白天/夜晚模式切换
-document.getElementById('mode-toggle-btn').addEventListener('click', function() {
-  const isDark = document.body.classList.toggle('dark-mode');
-  this.textContent = isDark ? '☀️ 白天模式' : '🌙 夜晚模式';
-  const themeMeta = document.querySelector('meta[name="theme-color"]');
-  themeMeta.content = isDark ? '#333' : '#4CAF50';
-});
-
-// PWA安装功能
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById('install-btn').style.display = 'flex';
-});
-
-document.getElementById('install-btn').addEventListener('click', async () => {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') deferredPrompt = null;
-    document.getElementById('install-btn').style.display = 'none';
-  }
-});
-
-window.addEventListener('appinstalled', () => {
-  deferredPrompt = null;
-  document.getElementById('install-btn').style.display = 'none';
-});
-</script>
-<script>
-// 全球时间实时更新（精确到毫秒）
-function updateGlobalTime() {
-  const now = new Date();
-  // 格式化工具：补零（数字转两位数）
-  const formatNum = (num) => num.toString().padStart(2, '0');
-  // 毫秒补零（三位数）
-  const formatMs = (ms) => ms.toString().padStart(3, '0');
-  const currentMs = formatMs(now.getMilliseconds());
-
-  // 1. UTC时间（世界协调时间）
-  const utcHours = formatNum(now.getUTCHours());
-  const utcMins = formatNum(now.getUTCMinutes());
-  const utcSecs = formatNum(now.getUTCSeconds());
-  document.getElementById('utc-time').textContent = `${utcHours}:${utcMins}:${utcSecs}.${currentMs}`;
-
-  // 2. 香港时间（UTC+8）
-  const hongkongTime = new Date(now.getTime() + 8 * 3600000); // 8小时=28800秒=28800000毫秒
-  const hkHours = formatNum(hongkongTime.getHours());
-  const hkMins = formatNum(hongkongTime.getMinutes());
-  const hkSecs = formatNum(hongkongTime.getSeconds());
-  document.getElementById('hongkong-time').textContent = `${hkHours}:${hkMins}:${hkSecs}.${currentMs}`;
-
-  // 3. 洛杉矶时间（UTC-8）
-  const laTime = new Date(now.getTime() - 8 * 3600000);
-  const laHours = formatNum(laTime.getHours());
-  const laMins = formatNum(laTime.getMinutes());
-  const laSecs = formatNum(laTime.getSeconds());
-  document.getElementById('losangeles-time').textContent = `${laHours}:${laMins}:${laSecs}.${currentMs}`;
-
-  // 4. 纽约时间（UTC-5）
-  const nyTime = new Date(now.getTime() - 5 * 3600000);
-  const nyHours = formatNum(nyTime.getHours());
-  const nyMins = formatNum(nyTime.getMinutes());
-  const nySecs = formatNum(nyTime.getSeconds());
-  document.getElementById('newyork-time').textContent = `${nyHours}:${nyMins}:${nySecs}.${currentMs}`;
+// 原有：白天/夜晚模式切换按钮（保留原逻辑，无修改）
+const modeBtn = document.getElementById('mode-toggle-btn');
+const currentMode = localStorage.getItem('theme') || 'light'; // 默认使用 'light' 模式
+if (currentMode === 'dark') {
+  document.body.classList.add('dark-mode');
+  modeBtn.textContent = "☀️ 白天模式";
+} else {
+  document.body.classList.remove('dark-mode');
+  modeBtn.textContent = "🌙 夜晚模式";
 }
-// 初始执行+定时更新（100毫秒=0.1秒，保证毫秒级刷新）
-updateGlobalTime();
-setInterval(updateGlobalTime, 100);
-</script>
-<script>
-// 日历（公历/农历）与生肖更新（每天更新1次即可）
-function updateCalendarAndZodiac() {
-  const now = new Date();
-  const formatNum = (num) => num.toString().padStart(2, '0');
 
-  // 1. 公历日期
-  const year = now.getFullYear();
-  const month = formatNum(now.getMonth() + 1); // 月份0-11，需+1
-  const day = formatNum(now.getDate());
-  document.getElementById('gregorian-date').textContent = `${year}年${month}月${day}日`;
-
-  // 2. 农历日期（依赖lunar.js库）
-  const lunar = new Lunar(now);
-  // 处理农历月份（避免"正月"重复显示，直接取库返回的完整月份+日期）
-  const lunarMonth = lunar.getMonth();
-  const lunarDay = lunar.getDay();
-  document.getElementById('lunar-date').textContent = `${lunar.getYear()}年${lunarMonth}${lunarDay}`;
-
-  // 3. 星期几
-  const weekdayList = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-  document.getElementById('weekday').textContent = weekdayList[now.getDay()];
-
-  // 4. 生肖（以2008年为鼠年，每12年一轮）
-  const zodiacList = ['鼠', '牛', '虎', '兔', '龙', '蛇', '马', '羊', '猴', '鸡', '狗', '猪'];
-  const zodiacIndex = (year - 2008) % 12;
-  // 处理负数情况（如2007年：(2007-2008)=-1 → -1%12=-1 → +12=11 → 猪）
-  const finalZodiacIndex = zodiacIndex < 0 ? zodiacIndex + 12 : zodiacIndex;
-  document.getElementById('chinese-zodiac').textContent = zodiacList[finalZodiacIndex];
-}
-// 初始执行+每日更新（86400000毫秒=24小时）
-updateCalendarAndZodiac();
-setInterval(updateCalendarAndZodiac, 86400000);
-</script>
-<script>
-// 本地天气获取（每小时更新1次）
-async function getAndUpdateLocalWeather() {
-  try {
-    // 替换为你的百度地图API密钥（需自行申请）
-    const baiduApiKey = '你的百度天气API密钥';
-    if (!baiduApiKey) throw new Error('请配置百度API密钥');
-
-    // 步骤1：通过IP获取当前城市定位
-    const locationRes = await fetch(`https://api.map.baidu.com/location/ip?ak=${baiduApiKey}&coor=bd09ll`);
-    const locationData = await locationRes.json();
-    // 检查定位接口返回状态（0=成功）
-    if (locationData.status !== 0 || !locationData.content?.address_detail) {
-      throw new Error('城市定位失败');
-    }
-
-    // 提取城市编码（用于查询天气）
-    const cityCode = locationData.content.address_detail.city_code;
-    const cityName = locationData.content.address_detail.city;
-
-    // 步骤2：通过城市编码获取天气数据
-    const weatherRes = await fetch(
-      `https://api.map.baidu.com/weather/v1/?district_id=${cityCode}&ak=${baiduApiKey}&data_type=all`
-    );
-    const weatherData = await weatherRes.json();
-    // 检查天气接口返回状态
-    if (weatherData.status !== 0 || !weatherData.result?.realtime) {
-      throw new Error('天气数据获取失败');
-    }
-
-    // 提取实时天气信息
-    const realtimeWeather = weatherData.result.realtime;
-    const weatherHtml = `
-      <span style="font-weight:bold;">城市：</span>${cityName}<br>
-      <span style="font-weight:bold;">天气：</span>${realtimeWeather.weather}<br>
-      <span style="font-weight:bold;">温度：</span>${realtimeWeather.temp}°C<br>
-      <span style="font-weight:bold;">风向：</span>${realtimeWeather.wind_dir} ${realtimeWeather.wind_class}<br>
-      <span style="font-weight:bold;">湿度：</span>${realtimeWeather.humidity}%
-    `;
-    // 渲染到页面
-    document.getElementById('local-weather').innerHTML = weatherHtml;
-
-  } catch (error) {
-    // 错误处理：显示失败提示
-    document.getElementById('local-weather').textContent = `天气加载失败：${error.message}`;
-    console.error('天气接口错误：', error);
+modeBtn.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+  if (document.body.classList.contains('dark-mode')) {
+    modeBtn.textContent = "☀️ 白天模式";
+    localStorage.setItem('theme', 'dark'); // 保存夜间模式
+  } else {
+    modeBtn.textContent = "🌙 夜晚模式";
+    localStorage.setItem('theme', 'light'); // 保存白天模式
   }
-}
-// 初始执行+每小时更新（3600000毫秒=1小时）
-getAndUpdateLocalWeather();
-setInterval(getAndUpdateLocalWeather, 3600000);
-</script>
-<script>
-// Gitalk留言板初始化（需配置GitHub OAuth信息）
-const gitalkComment = new Gitalk({
-  clientID: '你的GitHub ClientID', // 替换为你的GitHub OAuth ClientID
-  clientSecret: '你的GitHub ClientSecret', // 替换为你的GitHub OAuth ClientSecret
-  repo: 'youzai', // 存储留言的GitHub仓库名
-  owner: 'fuchenyouzai', // 仓库所有者（GitHub用户名）
-  admin: ['fuchenyouzai'], // 留言板管理员（可审核留言）
-  id: location.pathname, // 页面唯一标识（基于URL路径，确保不同页面留言独立）
-  distractionFreeMode: false, // 关闭"专注模式"（显示顶部导航）
-  title: `悠哉博客留言_${new Date().toLocaleDateString()}`, // 留言标题（含当前日期）
-  language: 'zh-CN' // 留言板语言（中文）
 });
-// 渲染留言板到指定容器
-gitalkComment.render('gitalk-container');
 </script>
 </body>
 </html>
