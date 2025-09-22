@@ -293,12 +293,15 @@ a.admin-btn:hover { background-color: #b71c1c; }
   安装悠哉博客到设备
 </div>
 
-<!-- 音量调节滑块 -->
-<input type="range" id="volume-slider" min="0" max="100" value="100" style="position: fixed; bottom: 100px; right: 20px; z-index: 1000; width: 100px;">
-
 <!-- 右下角按钮 -->
 <button id="sound-toggle-btn">🔊 打开声音</button>
 <button id="mode-toggle-btn">🌙 夜晚模式</button>
+
+<!-- 音量调节滑块 -->
+<div style="position: fixed; bottom: 100px; right: 20px; z-index: 1000; display: flex; align-items: center;">
+  <span style="color: white; margin-right: 10px;">音量</span>
+  <input type="range" id="volume-slider" min="0" max="100" value="100" style="width: 100px;">
+</div>
 
 <!-- Gitalk -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
