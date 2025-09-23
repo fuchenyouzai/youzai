@@ -7,18 +7,31 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 18
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
-      - uses: actions/cache@v3
+
+      - name: Cache Bubblewrap deps
+        uses: actions/cache@v3
         with:
           path: ~/.bubblewrap
           key: bubblewrap-deps
-      - run: npm install -g @bubblewrap/cli@latest 2>&1 | grep -v -E "deprecated|fund"
-      - run: { echo "Y"; sleep 2; echo "Y"; } | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
-      - run: bubblewrap build
-      - uses: actions/upload-artifact@v4
+
+      - name: Install Bubblewrap
+        run: npm install -g @bubblewrap/cli@latest 2>&1 | grep -v -E "deprecated|fund"
+
+      - name: Init TWA with auto-confirm
+        run: bash -c '{ echo "Y"; sleep 2; echo "Y"; }' | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
+
+      - name: Build WebAPK
+        run: bubblewrap build
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
         with:
           name: webapk
           path: ./webapk/*.apk
