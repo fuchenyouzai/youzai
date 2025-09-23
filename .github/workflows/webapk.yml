@@ -25,16 +25,8 @@ jobs:
       - name: Install Bubblewrap CLI
         run: npm install -g @bubblewrap/cli@latest 2>&1 | grep -v -E "deprecated|fund"
 
-      - name: Auto-confirm all prompts
-        run: |
-          {
-            sleep 10
-            echo "Y"
-            sleep 20
-            echo "Y"
-            sleep 8
-            echo "y"
-          } & bubblewrap init https://www.fuchenyouzai.dpdns.org --force
+      - name: Auto-confirm JDK first (no delay wait)
+        run: echo "Y" | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
 
       - name: Build WebAPK
         run: bubblewrap build
