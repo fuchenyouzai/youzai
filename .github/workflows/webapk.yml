@@ -24,15 +24,12 @@ jobs:
       - name: Install Bubblewrap (hide warnings)
         run: npm install -g @bubblewrap/cli@latest 2>&1 | grep -v -E "deprecated|fund"
 
-      - name: Auto-confirm all prompts (JDK+SDK+Terms)
+      - name: Auto-confirm all prompts (avoid log interference)
         run: |
-          {
-            echo "Y"
-            sleep 3
-            echo "Y"
-            sleep 3
-            echo "Y"
-          } | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
+          # 用文件暂存应答，等工具准备好再输出，避开日志干扰
+          echo -e "Y\nY\nY" > answers.txt
+          # 用cat缓慢输出，确保每个应答对应正确提问
+          cat answers.txt | while read line; do echo "$line"; sleep 5; done | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
 
       - name: Build WebAPK
         run: bubblewrap build
