@@ -1,34 +1,52 @@
 name: Build WebAPK
 on:
+  # 代码推送到main分支自动构建
   push:
     branches: [main]
+  # 支持手动触发（灵活调试）
   workflow_dispatch:
+
 jobs:
-  build:
+  build-webapk:
     runs-on: ubuntu-latest
     steps:
-      - name: 拉取代码
+      # 1. 拉取仓库代码（基础步骤，无坑）
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: 安装Node.js 18
+      # 2. 安装Node.js（Bubblewrap依赖，指定18版本稳定）
+      - name: Set up Node.js 18
         uses: actions/setup-node@v4
         with:
           node-version: '18'
+          cache: 'npm'  # 缓存npm依赖，加速Bubblewrap安装
 
-      - name: 安装Bubblewrap最新版
+      # 3. 缓存JDK+SDK（核心加速，30天自动续期）
+      - name: Cache Bubblewrap dependencies (JDK + Android SDK)
+        uses: actions/cache@v3
+        with:
+          path: ~/.bubblewrap  # 固定缓存目录（Bubblewrap默认依赖存放处）
+          key: bubblewrap-deps-v1  # 缓存标识（改此值才会重新缓存，建议长期不变）
+          restore-keys: |
+            bubblewrap-deps-  # 优先恢复历史缓存，无缓存时自动重新下载
+
+      # 4. 安装最新版Bubblewrap（兼容最新JDK/SDK，减少版本问题）
+      - name: Install Bubblewrap CLI (latest)
         run: npm install -g @bubblewrap/cli@latest
 
-      - name: 自动装JDK+SDK+初始化（无交互）
-        # 关键1：用英文半角引号（""），shell能正确解析换行
-        # 关键2：命令全英文（init/--force），无中文
-        run: printf "Y\nY\n" | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
+      # 5. 无交互初始化（关键！echo -e 确保Y实时传递，不被缓冲）
+      - name: Initialize TWA config (no interaction)
+        # echo -e 解析\n换行，依次应答JDK(Y)和SDK(Y)，工具无弹窗
+        run: echo -e "Y\nY" | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
 
-      - name: 构建WebAPK
+      # 6. 构建WebAPK（依赖已就绪，直接打包）
+      - name: Build WebAPK file
         run: bubblewrap build
 
-      - name: 上传APK
+      # 7. 上传APK成品（保留7天，方便下载）
+      - name: Upload WebAPK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: webapk
-          path: ./webapk/*.apk
-          retention-days: 7
+          name: webapk-final  # 下载时的压缩包名称（清晰识别）
+          path: ./webapk/*.apk  # 固定APK输出路径（Bubblewrap默认）
+          retention-days: 7  # 避免冗余文件，7天后自动清理
