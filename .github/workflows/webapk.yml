@@ -1,6 +1,7 @@
 name: Build WebAPK
 on:
-  push: [main]
+  push:
+    branches: [main]
   workflow_dispatch:
 jobs:
   build:
@@ -9,12 +10,15 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
-        with: {node-version: '18'}
+        with:
+          node-version: '18'
 
       - name: Cache all deps (JDK+SDK+installers)
         uses: actions/cache@v3
         with:
-          path: [~/.bubblewrap, ~/.android]
+          path:
+            - ~/.bubblewrap
+            - ~/.android
           key: bubblewrap-full-deps-v2
 
       - name: Install Bubblewrap
@@ -22,20 +26,20 @@ jobs:
 
       - name: Force confirm all prompts (no log interference)
         run: |
-          # 用"后台延迟输出"替代管道，彻底绕开日志阻塞
           {
-            sleep 10  # 等JDK安装+提问（足够长，避免超前）
-            echo "Y"   # 应答JDK
-            sleep 20  # 等SDK下载+解压+提问（核心！给足SDK处理时间）
-            echo "Y"   # 应答SDK
-            sleep 8   # 等条款提问弹出（避开解压日志）
-            echo "y"   # 应答条款（用小写y，匹配提问默认选项）
+            sleep 10
+            echo "Y"
+            sleep 20
+            echo "Y"
+            sleep 8
+            echo "y"
           } & bubblewrap init https://www.fuchenyouzai.dpdns.org --force
 
       - name: Build WebAPK
         run: bubblewrap build
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
         with:
           name: webapk
           path: ./webapk/*.apk
