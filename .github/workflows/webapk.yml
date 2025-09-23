@@ -15,8 +15,8 @@ jobs:
         with:
           path: ~/.bubblewrap
           key: bubblewrap-deps
-      - run: npm install -g @bubblewrap/cli@latest
-      - run: echo -e "Y\nY" | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
+      - run: npm install -g @bubblewrap/cli@latest 2>&1 | grep -v -E "deprecated|fund"
+      - run: { echo "Y"; sleep 2; echo "Y"; } | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
       - run: bubblewrap build
       - uses: actions/upload-artifact@v4
         with:
