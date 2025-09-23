@@ -17,27 +17,25 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'  # Bubblewrap 兼容的稳定版本
+        node-version: '14'
 
     - name: Set up JDK 17 (Adoptium)
       uses: actions/setup-java@v2
       with:
         java-version: '17'
-        distribution: 'temurin'  # 可靠的 JDK 发行版
+        distribution: 'temurin'
 
     - name: Install dependencies
-      run: |
-        npm install -g @bubblewrap/cli  # 全局安装 WebAPK 打包工具
+      run: npm install -g @bubblewrap/cli
 
     - name: Generate WebAPK using Bubblewrap
       run: |
-        # 关键修正：英文命令+空格分隔参数+--force避免交互
+        # 完全英文命令+参数，无任何中文
         bubblewrap init https://www.fuchenyouzai.dpdns.org --no-install-jdk --force
-        # 执行打包（生成的 APK 会放在 ./webapk 目录）
         bubblewrap build
 
     - name: Upload WebAPK as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: webapk  # 下载时的压缩包名称
-        path: ./webapk/*.apk  # 指向 APK 文件的路径
+        name: webapk
+        path: ./webapk/*.apk
