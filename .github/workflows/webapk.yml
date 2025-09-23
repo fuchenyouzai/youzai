@@ -15,14 +15,12 @@ jobs:
         with:
           node-version: '18'
 
-      # 关键优化：缓存JDK安装包（避免重复下载）+ 切换国内镜像加速
-      - name: Cache JDK installer + SDK
+      # 修复：单路径缓存，避免YAML序列解析冲突
+      - name: Cache JDK + SDK
         uses: actions/cache@v3
         with:
-          path:
-            - ~/.bubblewrap
-            - ~/.android
-          key: bubblewrap-deps-v7  # 升级缓存key，生效新缓存路径
+          path: ~/.bubblewrap
+          key: bubblewrap-deps-v7
           restore-keys: bubblewrap-deps-
 
       - name: Fix Bubblewrap dir permission (if exists)
@@ -42,18 +40,16 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y expect
 
-      # 核心修复：切换JDK国内镜像（解决下载超时）+ 延长超时时间
       - name: Smart auto-confirm (domestic mirror + longer timeout)
         uses: nick-invision/retry@v2
         with:
-          timeout_minutes: 30  # 延长超时至30分钟（应对大文件下载）
+          timeout_minutes: 30
           max_attempts: 2
           retry_wait_seconds: 20
           polling_interval_seconds: 5
           warning_on_retry: true
           continue_on_error: false
           command: |
-            # 切换Bubblewrap的JDK下载源为国内镜像（阿里云）
             export BUBBLEWRAP_JDK_MIRROR=https://mirrors.aliyun.com/openjdk/
             expect -c '
               spawn bubblewrap init https://www.fuchenyouzai.dpdns.org --force
