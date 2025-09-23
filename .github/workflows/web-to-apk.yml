@@ -1,0 +1,56 @@
+# 工作流名称：网页自动转APK
+name: Auto Build Web to APK
+# 触发条件：推送代码到main分支，或手动触发
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:  # 手动触发入口，在Actions页面点击“Run workflow”即可
+
+jobs:
+  build_apk:
+    # 运行环境：最新Ubuntu系统（GitHub官方提供，稳定兼容）
+    runs-on: ubuntu-latest
+    steps:
+      # 1. 拉取仓库代码（若网页文件在仓库中，必须保留；若仅打包远程网页，此步可删，但建议保留空仓库触发）
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. 安装Node.js（Bubblewrap工具依赖Node环境）
+      - name: Install Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'  # 固定Node版本，避免兼容性问题
+
+      # 3. 安装核心工具：Bubblewrap（网页转APK工具）+ expect（自动应答弹窗）
+      - name: Install Build Tools
+        run: |
+          # 全局安装Bubblewrap（Google官方工具，专门用于网页打包APK）
+          npm install -g @bubblewrap/cli@latest
+          # 安装expect，自动回答JDK/SDK安装确认（无需手动点“Y”）
+          sudo apt-get update && sudo apt-get install -y expect
+
+      # 4. 自动初始化配置 + 打包APK（核心步骤，针对你的网页链接）
+      - name: Auto Init & Build APK
+        run: |
+          expect -c '
+            # 启动Bubblewrap，指定你的网页链接，--force跳过手动确认
+            spawn bubblewrap init https://www.fuchenyouzai.dpdns.org --force
+            # 自动回答“安装JDK”（弹窗时发送“Y+回车”）
+            expect "Do you want Bubblewrap to install the JDK" { send "Y\r" }
+            # 自动回答“安装Android SDK”（弹窗时发送“Y+回车”）
+            expect "Do you want Bubblewrap to install the Android SDK" { send "Y\r" }
+            # 自动同意SDK条款（弹窗时发送“y+回车”，并等待5秒加载配置）
+            expect "Do you agree to the Android SDK terms" { send "y\r"; sleep 5 }
+            # 等待初始化完成
+            expect eof
+          '
+          # 初始化完成后，执行打包命令，生成APK文件
+          bubblewrap build
+
+      # 5. 上传APK文件（打包完成后，在Actions页面可下载）
+      - name: Upload Finished APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: YouzaiWeb-APK  # APK压缩包名称，可自定义
+          path: ./webapk/*.apk  # APK默认生成路径，固定无需改
+          retention-days: 7  # APK文件保留7天，避免占用存储
