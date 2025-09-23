@@ -1,14 +1,10 @@
 name: Build WebAPK
-
 on:
-  push:
-    branches: [main]
+  push: [main]
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
     - name: 拉取代码
       uses: actions/checkout@v4
@@ -18,18 +14,17 @@ jobs:
       with:
         node-version: '18'
 
-    - name: 安装Bubblewrap（最新版）
+    - name: 安装Bubblewrap最新版
       run: npm install -g @bubblewrap/cli@latest
 
-    - name: 自动构建WebAPK（工具自动装JDK）
+    - name: 自动装JDK+SDK+打包APK（无交互）
       run: |
-        # 关键1：echo "Y" 同意工具自动安装JDK，不用你管
-        # 关键2：全英文命令（init/--force），工具能识别
-        echo "Y" | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
-        # 构建阶段无需额外参数，工具已自带JDK
+        # 关键：依次应答“装JDK（Y）”和“装SDK（Y）”，用换行分隔
+        printf "Y\nY\n" | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
+        # 构建APK（工具已装好所有依赖）
         bubblewrap build
 
-    - name: 上传APK
+    - name: 上传APK成品
       uses: actions/upload-artifact@v4
       with:
         name: webapk
