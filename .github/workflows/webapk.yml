@@ -9,34 +9,32 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      # 关键：提前设置环境变量，强制 Bubblewrap 使用已安装的 JDK，不弹窗
+      # 强制跳过 JDK 安装确认，核心环境变量
       BUBBLEWRAP_SKIP_JDK_INSTALL: "true"
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4  # 升级到最新版，提升稳定性
+      uses: actions/checkout@v4  # 拉取仓库代码
 
-    - name: Set up Node.js
+    - name: Set up Node.js 18
       uses: actions/setup-node@v4
       with:
-        node-version: '18'  # 升级 Node.js 到 18（Bubblewrap 最新版推荐，避免版本兼容问题）
-        cache: 'npm'  # 缓存 npm 依赖，加速安装
+        node-version: '18'  # 仅保留版本配置，删除 cache（因无依赖锁文件）
 
     - name: Set up JDK 17 (Adoptium)
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
-        cache: 'gradle'  # 缓存 JDK 相关依赖
 
     - name: Install Bubblewrap (最新版)
-      run: npm install -g @bubblewrap/cli@latest  # 安装最新版，修复旧版参数识别 bug
+      run: npm install -g @bubblewrap/cli@latest  # 全局安装，无需项目锁文件
 
     - name: Generate WebAPK (无交互)
       run: |
-        # 1. 初始化配置（--force 跳过“是否覆盖”确认，环境变量跳过 JDK 确认）
+        # 初始化网页配置（--force 跳过覆盖确认）
         bubblewrap init https://www.fuchenyouzai.dpdns.org --force
-        # 2. 构建 APK（--no-install-jdk 在此处生效，确认不安装 JDK）
+        # 构建 APK（--no-install-jdk 确认不安装 JDK）
         bubblewrap build --no-install-jdk
 
     - name: Upload WebAPK
@@ -44,4 +42,4 @@ jobs:
       with:
         name: webapk
         path: ./webapk/*.apk
-        retention-days: 7  # 可选：设置制品保留 7 天，避免占用空间
+        retention-days: 7  # 制品保留 7 天，可选
