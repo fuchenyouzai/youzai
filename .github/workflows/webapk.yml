@@ -15,12 +15,14 @@ jobs:
         with:
           node-version: '18'
 
-      # 修复：单路径缓存，避免YAML序列解析冲突
-      - name: Cache JDK + SDK
+      # 恢复多路径缓存（用标准YAML分行格式，避免解析错误）
+      - name: Cache JDK installer + SDK (fast speed)
         uses: actions/cache@v3
         with:
-          path: ~/.bubblewrap
-          key: bubblewrap-deps-v7
+          path:
+            - ~/.bubblewrap
+            - ~/.android
+          key: bubblewrap-deps-v8
           restore-keys: bubblewrap-deps-
 
       - name: Fix Bubblewrap dir permission (if exists)
@@ -40,7 +42,8 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y expect
 
-      - name: Smart auto-confirm (domestic mirror + longer timeout)
+      # 保留国内镜像+之前的快速配置
+      - name: Smart auto-confirm (fast SDK download)
         uses: nick-invision/retry@v2
         with:
           timeout_minutes: 30
