@@ -3,8 +3,8 @@ name: Build WebAPK
 on:
   push:
     branches:
-      - main  # 或者你选择的分支
-  workflow_dispatch:
+      - main  # 可替换为你的目标分支
+  workflow_dispatch:  # 支持手动触发
 
 jobs:
   build:
@@ -17,26 +17,27 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: '14'  # Bubblewrap 兼容的稳定版本
 
     - name: Set up JDK 17 (Adoptium)
       uses: actions/setup-java@v2
       with:
         java-version: '17'
-        distribution: 'temurin'  # 使用 temurin 发行版的 JDK
+        distribution: 'temurin'  # 可靠的 JDK 发行版
 
     - name: Install dependencies
       run: |
-        npm install -g @bubblewrap/cli
+        npm install -g @bubblewrap/cli  # 全局安装 WebAPK 打包工具
 
     - name: Generate WebAPK using Bubblewrap
       run: |
-        # 使用 --no-install-jdk 参数来跳过 JDK 安装
-        bubblewrap init https://www.fuchenyouzai.dpdns.org --no-install-jdk  # 替换为你的博客 URL
+        # 关键修正：英文命令+空格分隔参数+--force避免交互
+        bubblewrap init https://www.fuchenyouzai.dpdns.org --no-install-jdk --force
+        # 执行打包（生成的 APK 会放在 ./webapk 目录）
         bubblewrap build
 
     - name: Upload WebAPK as artifact
       uses: actions/upload-artifact@v4
       with:
-        name: webapk
-        path: ./webapk/*.apk
+        name: webapk  # 下载时的压缩包名称
+        path: ./webapk/*.apk  # 指向 APK 文件的路径
