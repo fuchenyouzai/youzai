@@ -10,11 +10,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 修复：移除npm缓存配置（因仓库无package-lock.json等锁文件）
       - name: Setup Node.js 18
         uses: actions/setup-node@v4
         with:
-          node-version: '18'  # 仅指定Node版本，不启用npm缓存
+          node-version: '18'
 
       - name: Cache JDK + Android SDK
         uses: actions/cache@v3
@@ -23,8 +22,14 @@ jobs:
           key: bubblewrap-deps-v6
           restore-keys: bubblewrap-deps-
 
-      - name: Fix Bubblewrap dir permission
-        run: sudo chown -R runner:runner ~/.bubblewrap
+      # 修复：先判断目录是否存在，不存在则跳过权限修改（避免报错）
+      - name: Fix Bubblewrap dir permission (if exists)
+        run: |
+          if [ -d "/home/runner/.bubblewrap" ]; then
+            sudo chown -R runner:runner ~/.bubblewrap
+          else
+            echo "Bubblewrap dir not found, skip permission fix"
+          fi
 
       - name: Install tools (expect + fix apt lock)
         run: |
