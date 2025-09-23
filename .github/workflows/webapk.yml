@@ -1,41 +1,63 @@
 name: Build WebAPK
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 18
+      - name: Setup Node.js 18 (with npm cache)
         uses: actions/setup-node@v4
         with:
           node-version: '18'
+          cache: 'npm'  # 加速Bubblewrap安装
 
-      - name: Cache Bubblewrap deps
+      - name: Cache JDK + Android SDK
         uses: actions/cache@v3
         with:
           path: ~/.bubblewrap
-          key: bubblewrap-deps-v3
+          key: bubblewrap-deps-v6  # 定期更新版本号（如v7）避免旧缓存问题
+          restore-keys: bubblewrap-deps-  # 缓存回溯，提高命中率
 
-      - name: Install Bubblewrap
-        run: npm install -g @bubblewrap/cli@latest 2>&1 | grep -v -E "deprecated|fund"
+      - name: Fix Bubblewrap dir permission (avoid access error)
+        run: sudo chown -R runner:runner ~/.bubblewrap  # 解决极少数权限异常
 
-      - name: Auto-confirm JDK (wait for prompt first)
+      - name: Install tools (expect + fix apt lock)
         run: |
-          # 先等2秒，让工具完全启动并弹出JDK提问，再输出Y
-          sleep 2
-          echo "Y" | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
+          # 释放apt锁，避免安装冲突
+          sudo rm -f /var/lib/dpkg/lock-frontend /var/cache/apt/archives/lock
+          sudo apt-get update -y
+          sudo apt-get install -y expect  # 确保交互检测工具安装成功
+
+      - name: Smart auto-confirm (with timeout retry)
+        uses: nick-invision/retry@v2  # 失败自动重试，降低极端场景报错
+        with:
+          timeout_minutes: 20  # 预留足够下载时间（应对网络慢的情况）
+          max_attempts: 2      # 最多重试1次
+          command: |
+            expect -c '
+              spawn bubblewrap init https://www.fuchenyouzai.dpdns.org --force
+              # 监听所有关键提问，超时自动重试
+              expect {
+                "Do you want Bubblewrap to install the JDK" { send "Y\r"; exp_continue }
+                "Do you want Bubblewrap to install the Android SDK" { send "Y\r"; exp_continue }
+                "Do you agree to the Android SDK terms" { send "y\r"; sleep 5; exp_continue }
+                "Timeout" { send "\r"; exp_continue }  # 检测到超时，自动重试下载
+                eof
+              }
+              wait  # 等待工具完成所有操作，不提前释放终端
+            '
 
       - name: Build WebAPK
         run: bubblewrap build
 
-      - name: Upload APK
+      - name: Upload APK (auto-clean after 7 days)
         uses: actions/upload-artifact@v4
         with:
           name: webapk
           path: ./webapk/*.apk
+          retention-days: 7  # 自动清理旧产物，避免存储冗余
