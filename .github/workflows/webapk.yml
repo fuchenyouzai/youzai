@@ -24,8 +24,15 @@ jobs:
       - name: Install Bubblewrap (hide warnings)
         run: npm install -g @bubblewrap/cli@latest 2>&1 | grep -v -E "deprecated|fund"
 
-      - name: Auto-confirm all 3 prompts (JDK+SDK+Terms)
-        run: bash -c '{ echo "Y"; sleep 2; echo "Y"; sleep 2; echo "Y"; }' | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
+      - name: Auto-confirm all prompts (JDK+SDK+Terms)
+        run: |
+          {
+            echo "Y"
+            sleep 3
+            echo "Y"
+            sleep 3
+            echo "Y"
+          } | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
 
       - name: Build WebAPK
         run: bubblewrap build
