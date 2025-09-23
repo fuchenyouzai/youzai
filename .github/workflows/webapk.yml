@@ -1,32 +1,32 @@
 name: Build WebAPK
 on:
-  push: [main]
+  push:
+    branches: [main]
   workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: 拉取代码
-      uses: actions/checkout@v4
+      - name: 拉取仓库代码
+        uses: actions/checkout@v4
 
-    - name: 安装Node.js 18
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
+      - name: 安装Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
 
-    - name: 安装Bubblewrap最新版
-      run: npm install -g @bubblewrap/cli@latest
+      - name: 全局安装Bubblewrap最新版
+        run: npm install -g @bubblewrap/cli@latest
 
-    - name: 自动装JDK+SDK+打包APK（无交互）
-      run: |
-        # 关键：依次应答“装JDK（Y）”和“装SDK（Y）”，用换行分隔
-        printf "Y\nY\n" | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
-        # 构建APK（工具已装好所有依赖）
-        bubblewrap build
+      - name: 自动安装JDK+SDK并初始化配置
+        run: printf "Y\nY\n" | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
 
-    - name: 上传APK成品
-      uses: actions/upload-artifact@v4
-      with:
-        name: webapk
-        path: ./webapk/*.apk
-        retention-days: 7
+      - name: 构建WebAPK
+        run: bubblewrap build
+
+      - name: 上传APK作为制品
+        uses: actions/upload-artifact@v4
+        with:
+          name: webapk
+          path: ./webapk/*.apk
+          retention-days: 7
