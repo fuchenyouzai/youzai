@@ -8,38 +8,28 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      # 显式声明 JAVA_HOME（确保工具能读取）
-      JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.16-8/x64
 
     steps:
-    - name: Checkout repository
+    - name: 拉取代码
       uses: actions/checkout@v4
 
-    - name: Set up Node.js 18
+    - name: 安装Node.js 18
       uses: actions/setup-node@v4
       with:
         node-version: '18'
 
-    - name: Set up JDK 17 (Adoptium)
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        # 强制指定 JDK 安装路径，与上方 env 一致
-        path: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.16-8/x64
-
-    - name: Install Bubblewrap (最新版)
+    - name: 安装Bubblewrap（最新版）
       run: npm install -g @bubblewrap/cli@latest
 
-    - name: Generate WebAPK (覆盖所有交互)
+    - name: 自动构建WebAPK（工具自动装JDK）
       run: |
-        # 关键：依次应答“不安装 JDK” + “传入系统 JDK 路径”
-        printf "n\n$JAVA_HOME\n" | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
-        # 构建阶段明确跳过 JDK 安装
-        bubblewrap build --no-install-jdk
+        # 关键1：echo "Y" 同意工具自动安装JDK，不用你管
+        # 关键2：全英文命令（init/--force），工具能识别
+        echo "Y" | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
+        # 构建阶段无需额外参数，工具已自带JDK
+        bubblewrap build
 
-    - name: Upload WebAPK
+    - name: 上传APK
       uses: actions/upload-artifact@v4
       with:
         name: webapk
