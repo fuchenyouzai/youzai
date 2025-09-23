@@ -3,45 +3,22 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-
 jobs:
-  build-webapk:
+  build:
     runs-on: ubuntu-latest
     steps:
-      # 1. 拉取仓库代码
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # 2. 安装Node.js 18（删除npm缓存配置，避免锁文件报错）
-      - name: Set up Node.js 18
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '18'  # 只保留版本配置，无多余缓存
-
-      # 3. 缓存JDK+SDK（核心加速，不依赖任何项目文件）
-      - name: Cache Bubblewrap dependencies (JDK + SDK)
-        uses: actions/cache@v3
+          node-version: '18'
+      - uses: actions/cache@v3
         with:
           path: ~/.bubblewrap
-          key: bubblewrap-deps-v1
-          restore-keys: bubblewrap-deps-
-
-      # 4. 安装Bubblewrap（全局安装，无需项目依赖）
-      - name: Install Bubblewrap CLI
-        run: npm install -g @bubblewrap/cli@latest
-
-      # 5. 无交互初始化（确保应答实时传递）
-      - name: Initialize TWA config
-        run: echo -e "Y\nY" | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
-
-      # 6. 构建WebAPK
-      - name: Build WebAPK
-        run: bubblewrap build
-
-      # 7. 上传APK成品
-      - name: Upload WebAPK
-        uses: actions/upload-artifact@v4
+          key: bubblewrap-deps
+      - run: npm install -g @bubblewrap/cli@latest
+      - run: echo -e "Y\nY" | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
+      - run: bubblewrap build
+      - uses: actions/upload-artifact@v4
         with:
-          name: webapk-final
+          name: webapk
           path: ./webapk/*.apk
-          retention-days: 7
