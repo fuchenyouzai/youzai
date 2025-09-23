@@ -19,9 +19,7 @@ jobs:
       - name: Cache dependencies
         uses: actions/cache@v3
         with:
-          path:
-            - ~/.bubblewrap
-            - ~/.android
+          path: ~/.bubblewrap
           key: bubblewrap-deps-v2
 
       - name: Install Bubblewrap CLI
