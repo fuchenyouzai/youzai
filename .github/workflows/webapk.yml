@@ -25,8 +25,13 @@ jobs:
       - name: Install Bubblewrap CLI
         run: npm install -g @bubblewrap/cli@latest 2>&1 | grep -v -E "deprecated|fund"
 
-      - name: Auto-confirm JDK first (no delay wait)
-        run: echo "Y" | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
+      - name: Auto-confirm JDK + SDK (match prompt timing)
+        run: |
+          {
+            echo "Y"  # 应答JDK提问（工具启动即输出，不延迟）
+            sleep 15  # 等JDK下载解压完成，直到SDK提问弹出
+            echo "Y"  # 应答SDK提问
+          } & bubblewrap init https://www.fuchenyouzai.dpdns.org --force
 
       - name: Build WebAPK
         run: bubblewrap build
