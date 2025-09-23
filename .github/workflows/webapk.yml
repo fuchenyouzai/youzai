@@ -1,41 +1,41 @@
 name: Build WebAPK
 on:
-  push:
-    branches: [main]
+  push: [main]
   workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js 18
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
+      - uses: actions/setup-node@v4
+        with: {node-version: '18'}
 
-      - name: Cache Bubblewrap deps
+      - name: Cache all deps (JDK+SDK+installers)
         uses: actions/cache@v3
         with:
-          path: ~/.bubblewrap
-          key: bubblewrap-deps
+          path: [~/.bubblewrap, ~/.android]
+          key: bubblewrap-full-deps-v2
 
-      - name: Install Bubblewrap (hide warnings)
+      - name: Install Bubblewrap
         run: npm install -g @bubblewrap/cli@latest 2>&1 | grep -v -E "deprecated|fund"
 
-      - name: Auto-confirm all prompts (avoid log interference)
+      - name: Force confirm all prompts (no log interference)
         run: |
-          # 用文件暂存应答，等工具准备好再输出，避开日志干扰
-          echo -e "Y\nY\nY" > answers.txt
-          # 用cat缓慢输出，确保每个应答对应正确提问
-          cat answers.txt | while read line; do echo "$line"; sleep 5; done | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
+          # 用"后台延迟输出"替代管道，彻底绕开日志阻塞
+          {
+            sleep 10  # 等JDK安装+提问（足够长，避免超前）
+            echo "Y"   # 应答JDK
+            sleep 20  # 等SDK下载+解压+提问（核心！给足SDK处理时间）
+            echo "Y"   # 应答SDK
+            sleep 8   # 等条款提问弹出（避开解压日志）
+            echo "y"   # 应答条款（用小写y，匹配提问默认选项）
+          } & bubblewrap init https://www.fuchenyouzai.dpdns.org --force
 
       - name: Build WebAPK
         run: bubblewrap build
 
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: webapk
           path: ./webapk/*.apk
