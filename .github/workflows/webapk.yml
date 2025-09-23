@@ -2,40 +2,46 @@ name: Build WebAPK
 
 on:
   push:
-    branches:
-      - main  # 可替换为你的目标分支
-  workflow_dispatch:  # 支持手动触发
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # 关键：提前设置环境变量，强制 Bubblewrap 使用已安装的 JDK，不弹窗
+      BUBBLEWRAP_SKIP_JDK_INSTALL: "true"
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4  # 升级到最新版，提升稳定性
 
     - name: Set up Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
       with:
-        node-version: '14'
+        node-version: '18'  # 升级 Node.js 到 18（Bubblewrap 最新版推荐，避免版本兼容问题）
+        cache: 'npm'  # 缓存 npm 依赖，加速安装
 
     - name: Set up JDK 17 (Adoptium)
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
+        cache: 'gradle'  # 缓存 JDK 相关依赖
 
-    - name: Install dependencies
-      run: npm install -g @bubblewrap/cli
+    - name: Install Bubblewrap (最新版)
+      run: npm install -g @bubblewrap/cli@latest  # 安装最新版，修复旧版参数识别 bug
 
-    - name: Generate WebAPK using Bubblewrap
+    - name: Generate WebAPK (无交互)
       run: |
-        # 完全英文命令+参数，无任何中文
-        bubblewrap init https://www.fuchenyouzai.dpdns.org --no-install-jdk --force
-        bubblewrap build
+        # 1. 初始化配置（--force 跳过“是否覆盖”确认，环境变量跳过 JDK 确认）
+        bubblewrap init https://www.fuchenyouzai.dpdns.org --force
+        # 2. 构建 APK（--no-install-jdk 在此处生效，确认不安装 JDK）
+        bubblewrap build --no-install-jdk
 
-    - name: Upload WebAPK as artifact
+    - name: Upload WebAPK
       uses: actions/upload-artifact@v4
       with:
         name: webapk
         path: ./webapk/*.apk
+        retention-days: 7  # 可选：设置制品保留 7 天，避免占用空间
