@@ -8,30 +8,28 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Set up Node.js 18
+      - name: Setup Node.js 18
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
-      - name: Cache dependencies
+      - name: Cache Bubblewrap deps
         uses: actions/cache@v3
         with:
           path: ~/.bubblewrap
-          key: bubblewrap-deps-v2
+          key: bubblewrap-deps-v3
 
-      - name: Install Bubblewrap CLI
+      - name: Install Bubblewrap
         run: npm install -g @bubblewrap/cli@latest 2>&1 | grep -v -E "deprecated|fund"
 
-      - name: Auto-confirm JDK + SDK (match prompt timing)
+      - name: Auto-confirm JDK (wait for prompt first)
         run: |
-          {
-            echo "Y"  # 应答JDK提问（工具启动即输出，不延迟）
-            sleep 15  # 等JDK下载解压完成，直到SDK提问弹出
-            echo "Y"  # 应答SDK提问
-          } & bubblewrap init https://www.fuchenyouzai.dpdns.org --force
+          # 先等2秒，让工具完全启动并弹出JDK提问，再输出Y
+          sleep 2
+          echo "Y" | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
 
       - name: Build WebAPK
         run: bubblewrap build
