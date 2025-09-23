@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: 拉取仓库代码
+      - name: 拉取代码
         uses: actions/checkout@v4
 
       - name: 安装Node.js 18
@@ -15,16 +15,18 @@ jobs:
         with:
           node-version: '18'
 
-      - name: 全局安装Bubblewrap最新版
+      - name: 安装Bubblewrap最新版
         run: npm install -g @bubblewrap/cli@latest
 
-      - name: 自动安装JDK+SDK并初始化配置
+      - name: 自动装JDK+SDK+初始化（无交互）
+        # 关键1：用英文半角引号（""），shell能正确解析换行
+        # 关键2：命令全英文（init/--force），无中文
         run: printf "Y\nY\n" | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
 
       - name: 构建WebAPK
         run: bubblewrap build
 
-      - name: 上传APK作为制品
+      - name: 上传APK
         uses: actions/upload-artifact@v4
         with:
           name: webapk
