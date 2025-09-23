@@ -8,6 +8,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # 显式声明 JAVA_HOME（确保工具能读取）
+      JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.16-8/x64
 
     steps:
     - name: Checkout repository
@@ -23,13 +26,17 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+        # 强制指定 JDK 安装路径，与上方 env 一致
+        path: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.16-8/x64
 
-    - name: Install Bubblewrap
+    - name: Install Bubblewrap (最新版)
       run: npm install -g @bubblewrap/cli@latest
 
-    - name: Generate WebAPK
+    - name: Generate WebAPK (覆盖所有交互)
       run: |
-        echo "n" | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
+        # 关键：依次应答“不安装 JDK” + “传入系统 JDK 路径”
+        printf "n\n$JAVA_HOME\n" | bubblewrap init https://www.fuchenyouzai.dpdns.org --force
+        # 构建阶段明确跳过 JDK 安装
         bubblewrap build --no-install-jdk
 
     - name: Upload WebAPK
