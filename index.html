@@ -203,6 +203,299 @@ a.admin-btn:hover { background-color: #b71c1c; }
 <h2>悠哉的Telegram</h2>
 <a href="https://t.me/fuchenyouzaibot" target="_blank" class="telegram-btn">联系 Telegram</a>
 </article>	
+
+
+
+<!-- 全球时间模块（毫秒级同步+自动适配时区） -->
+<article>
+<h2>全球时间（毫秒级同步）</h2>
+<div class="horizontal-module">
+  <div class="module-item">
+    <p style="font-weight: 600;">UTC 世界时</p>
+    <p id="utc-time">00:00:00.000</p>
+  </div>
+  <div class="module-item">
+    <p style="font-weight: 600;">北京（UTC+8）</p>
+    <p id="beijing-time">00:00:00.000</p>
+  </div>
+  <div class="module-item">
+    <p style="font-weight: 600;">伦敦（自动夏令时）</p>
+    <p id="london-time">00:00:00.000</p>
+  </div>
+  <div class="module-item">
+    <p style="font-weight: 600;">纽约（自动夏令时）</p>
+    <p id="newyork-time">00:00:00.000</p>
+  </div>
+</div>
+<p style="font-size: 12px; color: #666; margin-top: 8px; text-align: center;">
+  时间更新频率：1毫秒/次 | 时区自动适配（含夏令时）
+</p>
+</article>
+
+<!-- 时间模块CSS（无需额外依赖，独立完整） -->
+<style>
+.horizontal-module {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: center;
+  margin-top: 15px;
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  width: 100%;
+  box-sizing: border-box;
+}
+.horizontal-module .module-item {
+  flex: 1;
+  min-width: 120px;
+  text-align: center;
+}
+#utc-time, #beijing-time, #london-time, #newyork-time {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #2c3e50;
+}
+article {
+  background: #fff;
+  margin: 0 auto 20px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  max-width: 1200px;
+  width: 100%;
+  box-sizing: border-box;
+}
+h2 { 
+  color: #4CAF50; 
+  margin-top: 0; 
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+</style>
+
+<!-- 时间模块JS（自动适配夏令时，无需手动维护时区） -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // 格式化时间（带毫秒+自动时区）
+  const formatTimeWithMs = (date, timezone) => {
+    const timeStr = date.toLocaleTimeString('zh-CN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      fractionalSecondDigits: 3,
+      hour12: false,
+      timeZone: timezone
+    });
+    // 替换逗号为小数点（统一毫秒格式）
+    return timeStr.replace(',', '.');
+  };
+
+  // 实时更新时间
+  const updateGlobalTime = () => {
+    const now = new Date();
+    // 各时区时间同步（自动适配夏令时）
+    document.getElementById('utc-time').textContent = formatTimeWithMs(now, 'UTC');
+    document.getElementById('beijing-time').textContent = formatTimeWithMs(now, 'Asia/Shanghai');
+    document.getElementById('london-time').textContent = formatTimeWithMs(now, 'Europe/London');
+    document.getElementById('newyork-time').textContent = formatTimeWithMs(now, 'America/New_York');
+  };
+
+  // 初始化+毫秒级更新
+  updateGlobalTime();
+  setInterval(updateGlobalTime, 1);
+});
+</script>
+
+
+<!-- 模块开头：GitHub博客专用人民币实时汇率查询与转换工具 -->
+<div style="width: 100%; max-width: 800px; margin: 25px auto; padding: 20px; border-radius: 10px; box-shadow: 0 3px 15px rgba(0,0,0,0.06); background: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <!-- 标题区域 -->
+  <h3 style="margin: 0 0 20px; font-size: 18px; color: #333; border-bottom: 1px solid #f5f5f5; padding-bottom: 10px;">
+    人民币实时汇率查询与转换
+  </h3>
+
+  <!-- 汇率显示区域 -->
+  <div style="margin-bottom: 25px;">
+    <h4 style="margin: 0 0 12px; font-size: 14px; color: #666;">当前汇率（1人民币可兑换）</h4>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+      <!-- 美元汇率卡片 -->
+      <div style="padding: 15px; border-radius: 8px; background: #f8f9fa; text-align: center;">
+        <div style="font-size: 12px; color: #999; margin-bottom: 5px;">美元 (USD)</div>
+        <div id="cny-to-usd" style="font-size: 20px; font-weight: 500; color: #333;">--</div>
+        <div id="usd-to-cny" style="font-size: 12px; color: #666; margin-top: 3px;">1 USD ≈ -- CNY</div>
+      </div>
+      <!-- 日元汇率卡片 -->
+      <div style="padding: 15px; border-radius: 8px; background: #f8f9fa; text-align: center;">
+        <div style="font-size: 12px; color: #999; margin-bottom: 5px;">日元 (JPY)</div>
+        <div id="cny-to-jpy" style="font-size: 20px; font-weight: 500; color: #333;">--</div>
+        <div id="jpy-to-cny" style="font-size: 12px; color: #666; margin-top: 3px;">100 JPY ≈ -- CNY</div>
+      </div>
+      <!-- 港元汇率卡片 -->
+      <div style="padding: 15px; border-radius: 8px; background: #f8f9fa; text-align: center;">
+        <div style="font-size: 12px; color: #999; margin-bottom: 5px;">港元 (HKD)</div>
+        <div id="cny-to-hkd" style="font-size: 20px; font-weight: 500; color: #333;">--</div>
+        <div id="hkd-to-cny" style="font-size: 12px; color: #666; margin-top: 3px;">1 HKD ≈ -- CNY</div>
+      </div>
+    </div>
+    <div id="rate-update-time" style="margin-top: 10px; font-size: 12px; color: #999; text-align: right;">
+      汇率更新时间：--
+    </div>
+  </div>
+
+  <!-- 汇率转换区域 -->
+  <div>
+    <h4 style="margin: 0 0 12px; font-size: 14px; color: #666;">货币转换</h4>
+    <div style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center;">
+      <!-- 输入金额 -->
+      <div style="flex: 1; min-width: 150px;">
+        <label style="display: block; font-size: 12px; color: #666; margin-bottom: 5px;">输入金额</label>
+        <input 
+          id="convert-amount" 
+          type="number" 
+          min="0" 
+          step="0.01" 
+          value="1" 
+          style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;"
+        >
+      </div>
+      <!-- 源货币选择 -->
+      <div style="min-width: 120px;">
+        <label style="display: block; font-size: 12px; color: #666; margin-bottom: 5px;">源货币</label>
+        <select id="source-currency" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; background: #fff;">
+          <option value="CNY">人民币 (CNY)</option>
+          <option value="USD">美元 (USD)</option>
+          <option value="JPY">日元 (JPY)</option>
+          <option value="HKD">港元 (HKD)</option>
+        </select>
+      </div>
+      <!-- 目标货币选择 -->
+      <div style="min-width: 120px;">
+        <label style="display: block; font-size: 12px; color: #666; margin-bottom: 5px;">目标货币</label>
+        <select id="target-currency" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; background: #fff;">
+          <option value="USD">美元 (USD)</option>
+          <option value="JPY">日元 (JPY)</option>
+          <option value="HKD">港元 (HKD)</option>
+          <option value="CNY">人民币 (CNY)</option>
+        </select>
+      </div>
+      <!-- 转换按钮 -->
+      <div style="min-width: 100px; align-self: flex-end; margin-bottom: 24px;">
+        <button id="convert-btn" style="width: 100%; padding: 10px; background: #2c3e50; color: #fff; border: none; border-radius: 4px; cursor: pointer; transition: background 0.3s;">
+          立即转换
+        </button>
+      </div>
+    </div>
+    <!-- 转换结果 -->
+    <div id="convert-result" style="margin-top: 15px; padding: 15px; border-radius: 8px; background: #f8f9fa; text-align: center; font-size: 16px; color: #333; display: none;">
+      <span id="result-content">1 CNY ≈ 0.14 USD</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 存储汇率数据（CNY为基础，1 CNY = ? 其他货币）
+  let exchangeRates = {};
+  // 公开汇率API（无需密钥，适合前端调用）
+  const RATE_API_URL = "https://open.er-api.com/v6/latest/CNY";
+
+  // 1. 获取并更新实时汇率
+  async function fetchAndUpdateRates() {
+    const usdDom = document.getElementById("cny-to-usd");
+    const jpyDom = document.getElementById("cny-to-jpy");
+    const hkdDom = document.getElementById("cny-to-hkd");
+    const usdReverseDom = document.getElementById("usd-to-cny");
+    const jpyReverseDom = document.getElementById("jpy-to-cny");
+    const hkdReverseDom = document.getElementById("hkd-to-cny");
+    const timeDom = document.getElementById("rate-update-time");
+
+    try {
+      const response = await fetch(RATE_API_URL);
+      const data = await response.json();
+      
+      if (data.result === "success") {
+        // 存储汇率（保留4位小数）
+        exchangeRates = {
+          USD: parseFloat(data.rates.USD.toFixed(4)),
+          JPY: parseFloat(data.rates.JPY.toFixed(4)),
+          HKD: parseFloat(data.rates.HKD.toFixed(4)),
+          CNY: 1 // 1 CNY = 1 CNY
+        };
+
+        // 更新汇率显示（1 CNY 可兑换的其他货币）
+        usdDom.textContent = exchangeRates.USD;
+        jpyDom.textContent = exchangeRates.JPY;
+        hkdDom.textContent = exchangeRates.HKD;
+
+        // 更新反向汇率（1其他货币 可兑换的CNY，保留4位小数）
+        usdReverseDom.textContent = `1 USD ≈ ${(1 / exchangeRates.USD).toFixed(4)} CNY`;
+        jpyReverseDom.textContent = `100 JPY ≈ ${(100 / exchangeRates.JPY).toFixed(4)} CNY`;
+        hkdReverseDom.textContent = `1 HKD ≈ ${(1 / exchangeRates.HKD).toFixed(4)} CNY`;
+
+        // 更新时间（格式：YYYY-MM-DD HH:MM）
+        const updateTime = new Date(data.time_last_update_unix * 1000);
+        const formattedTime = `${updateTime.getFullYear()}-${(updateTime.getMonth() + 1).toString().padStart(2, "0")}-${updateTime.getDate().toString().padStart(2, "0")} ${updateTime.getHours().toString().padStart(2, "0")}:${updateTime.getMinutes().toString().padStart(2, "0")}`;
+        timeDom.textContent = `汇率更新时间：${formattedTime}`;
+      } else {
+        throw new Error("获取汇率失败，API返回错误");
+      }
+    } catch (err) {
+      console.error("汇率获取错误：", err);
+      usdDom.textContent = "获取失败";
+      jpyDom.textContent = "获取失败";
+      hkdDom.textContent = "获取失败";
+      timeDom.textContent = "汇率更新时间：获取失败";
+    }
+  }
+
+  // 2. 执行货币转换
+  function handleCurrencyConvert() {
+    const amountInput = document.getElementById("convert-amount");
+    const sourceCurrency = document.getElementById("source-currency").value;
+    const targetCurrency = document.getElementById("target-currency").value;
+    const resultDom = document.getElementById("convert-result");
+    const resultContentDom = document.getElementById("result-content");
+
+    // 输入校验
+    const amount = parseFloat(amountInput.value);
+    if (isNaN(amount) || amount < 0) {
+      alert("请输入有效的非负金额");
+      return;
+    }
+    if (!exchangeRates[sourceCurrency] || !exchangeRates[targetCurrency]) {
+      alert("汇率数据未加载完成，请稍后再试");
+      return;
+    }
+
+    // 计算转换结果（保留4位小数）
+    // 逻辑：金额 * (1 CNY兑目标货币汇率) / (1 CNY兑源货币汇率)
+    const convertedAmount = (amount * exchangeRates[targetCurrency] / exchangeRates[sourceCurrency]).toFixed(4);
+    // 显示结果
+    resultContentDom.textContent = `${amount} ${sourceCurrency} ≈ ${convertedAmount} ${targetCurrency}`;
+    resultDom.style.display = "block";
+  }
+
+  // 3. 初始化与事件绑定
+  window.addEventListener("DOMContentLoaded", () => {
+    // 初始加载汇率
+    fetchAndUpdateRates();
+    // 每30分钟刷新一次汇率（避免频繁请求API）
+    setInterval(fetchAndUpdateRates, 30 * 60 * 1000);
+
+    // 绑定转换按钮点击事件
+    document.getElementById("convert-btn").addEventListener("click", handleCurrencyConvert);
+    // 绑定回车键触发转换
+    document.getElementById("convert-amount").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") handleCurrencyConvert();
+    });
+  });
+</script>
+<!-- 模块结尾：GitHub博客专用人民币实时汇率查询与转换工具 -->
+
+
+
 	
 <!-- 文章内容 -->
 <article>
@@ -220,7 +513,7 @@ a.admin-btn:hover { background-color: #b71c1c; }
 </article>
 
 <article>
-<h2>音乐分享</h2>
+<h2>音乐分享1</h2>
 <p>一人一首经典曲✌︎˶╹ꇴ╹˶✌︎ </p>
 <div class="video-container">
   <iframe width="560" height="315" src="https://www.youtube.com/embed/WbW00ghKFt0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -228,7 +521,7 @@ a.admin-btn:hover { background-color: #b71c1c; }
 </article>
 
 <article>
-<h2>我的第一篇博文</h2>
+<h2>悠哉博文</h2>
 <p>这是我的第一篇博客文章，欢迎大家来到我的博客！我会分享生活、技术、旅行和各种有趣的内容。</p>
 <!-- 横向展示两张图片 -->
 <div class="gallery">
@@ -246,7 +539,7 @@ a.admin-btn:hover { background-color: #b71c1c; }
 </article>
 
 <article>
-  <h2>音乐分享</h2>
+  <h2>音乐分享2</h2>
   <p>这是我最近发现 的一首音乐，大家可以试听。</p>
   <audio controls preload="auto" controlsList="nodownload">
     <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
@@ -255,7 +548,7 @@ a.admin-btn:hover { background-color: #b71c1c; }
 </article>
 
 <article>
-<h2>悠哉(„• ֊ •„)੭</h2>
+<h2>悠哉相册</h2>
 <div class="gallery">
 <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t2.jpg" alt="图片1">
 <img src="https://raw.githubusercontent.com/fuchenyouzai/youzai/main/t4.jpg" alt="图片3">
@@ -263,19 +556,19 @@ a.admin-btn:hover { background-color: #b71c1c; }
 </article>
 
 <article>
-<h2>悠哉的YouTube</h2>
+<h2>悠哉YouTube</h2>
 <a href="https://www.youtube.com/@拂尘悠哉" target="_blank" class="telegram-btn">访问 YouTube</a>
 <div id="youtube-feed" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; margin-top:10px;"></div>
 </article>
 
 <article>
-<h2>悠哉的留言板（Gitalk）</h2>
+<h2>悠哉留言板1（Gitalk）</h2>
 <div id="gitalk-container"></div>
 <a href="https://github.com/fuchenyouzai/youzai/issues" target="_blank" class="admin-btn" style="margin-top:10px;">查看 GitHub 后台评论</a>
 </article>
 
 <article>
-<h2>悠哉的留言板（Disqus 中文）</h2>
+<h2>悠哉留言板2（Disqus 中文）</h2>
 <div id="disqus_thread"></div>
 <script>
 (function() { 
