@@ -613,7 +613,6 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 
 <!-- 右下角按钮 -->
-<button id="sound-toggle-btn">🔊 打开声音</button>
 <button id="mode-toggle-btn">🌙 夜晚模式</button>
 
 <!-- 新增：左下角全局声音控制按钮（含音量滑块） -->
@@ -627,11 +626,6 @@ document.addEventListener('DOMContentLoaded', () => {
   </div>
 </div>
 
-<!-- 原有：右侧音量滑块区域 -->
-<div style="position: fixed; bottom: 100px; right: 20px; z-index: 1000; display: flex; align-items: center;">
-  <span style="color: white; margin-right: 10px; background-color: rgba(0, 0, 0, 0.5); padding: 3px 6px; border-radius: 4px;">音量</span>
-  <input type="range" id="volume-slider" min="0" max="100" value="100" style="width: 100px;">
-</div>
 
 <!-- 外部资源引入（保留原结构） -->
 <!-- Gitalk -->
@@ -667,7 +661,7 @@ liveChannels.forEach(channel => {
   iframeWrapper.style.borderRadius = "5px";
   iframeWrapper.style.paddingBottom = "56.25%"; // 16:9比例
   
-  // 新增：为iframe添加enablejsapi=1，支持YouTube API控制
+  // 为iframe添加enablejsapi=1，支持YouTube API控制
   iframeWrapper.innerHTML = `<iframe src="https://www.youtube.com/embed/${channel.id}?enablejsapi=1" 
                               style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"
                               title="${channel.title}" 
@@ -695,7 +689,7 @@ liveChannels.forEach(channel => {
   channelWrapper.appendChild(channelInfo);
   liveChannelFeed.appendChild(channelWrapper);
 
-  // 新增：监听iframe加载，获取播放器实例并加入全局控制
+  // 监听iframe加载，获取播放器实例并加入全局控制
   const iframe = document.getElementById(`live-iframe-${channel.id}`);
   iframe.onload = () => {
     setTimeout(() => {
@@ -721,11 +715,11 @@ liveChannels.forEach(channel => {
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // 新增：1. 收集所有画廊图片 & 初始化当前索引
+  // 收集所有画廊图片 & 初始化当前索引
   const galleryImages = Array.from(document.querySelectorAll('.gallery img'));
   let currentImageIndex = 0;
 
-  // 新增：2. 图片切换核心函数（更新放大层图片）
+  // 图片切换核心函数（更新放大层图片）
   function updateOverlayImage(index) {
     const overlayImg = document.querySelector('.image-overlay img');
     if (overlayImg && galleryImages[index]) {
@@ -735,7 +729,7 @@ document.addEventListener('DOMContentLoaded', () => {
     currentImageIndex = index; // 更新当前索引
   }
 
-  // 新增：3. 上一张/下一张切换函数（支持循环）
+  // 上一张/下一张切换函数（支持循环）
   function showPrevImage() {
     let newIndex = currentImageIndex - 1;
     newIndex = newIndex < 0 ? galleryImages.length - 1 : newIndex; // 循环到最后一张
@@ -747,7 +741,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateOverlayImage(newIndex);
   }
 
-  // 原有：全局声音控制初始化（保留）
+  // 全局声音控制初始化
   window.globalAudioElements = Array.from(document.querySelectorAll('audio'));
   window.isGlobalSoundOn = false;
   const globalSoundBtn = document.getElementById('global-sound-btn');
@@ -758,7 +752,7 @@ document.addEventListener('DOMContentLoaded', () => {
     audio.volume = globalVolumeSlider.value / 100;
   });
 
-  // 原有：Gitalk 初始化（保留）
+  // Gitalk 初始化
   const gitalk = new Gitalk({
     clientID: 'Ov23lijfU0G3M7jiMFAW',
     clientSecret: '47120dd1810d3a2a9aa0033211f5ee73ef29baa3',
@@ -771,8 +765,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   gitalk.render('gitalk-container');
   
-  // 原有：音量滑块同步逻辑（保留）
-  const volumeSlider = document.getElementById('volume-slider');
+  // 音量滑块同步逻辑
   volumeSlider.addEventListener('input', (event) => {
     const volume = event.target.value;
     if (window.livePlayer) window.livePlayer.setVolume(volume);
@@ -780,7 +773,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.syncGlobalVolume) window.syncGlobalVolume(volume);
   });
 
-  // 重写：4. 图片点击放大逻辑（替换原逻辑，支持滑动+按钮）
+  // 图片点击放大逻辑
   galleryImages.forEach((img, index) => {
     img.addEventListener('click', () => {
       currentImageIndex = index; // 记录当前点击图片索引
@@ -803,7 +796,7 @@ document.addEventListener('DOMContentLoaded', () => {
       overlay.style.padding = '20px';
       overlay.style.boxSizing = 'border-box';
 
-      // 新增：上一张按钮
+      // 上一张按钮
       const prevBtn = document.createElement('button');
       prevBtn.textContent = '← 上一张';
       prevBtn.style.position = 'absolute';
@@ -823,7 +816,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showPrevImage();
       });
 
-      // 新增：下一张按钮
+      // 下一张按钮
       const nextBtn = document.createElement('button');
       nextBtn.textContent = '下一张 →';
       nextBtn.style.position = 'absolute';
@@ -842,7 +835,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e.stopPropagation(); // 阻止关闭放大层
         showNextImage();
       });
-      // 新增：关闭按钮
+      // 关闭按钮
       const closeBtn = document.createElement('button');
       closeBtn.textContent = '× 关闭';
       closeBtn.style.position = 'absolute';
@@ -883,7 +876,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.removeEventListener('keydown', handleKeyDown);
       });
 
-      // 新增：移动端触摸滑动支持
+      // 移动端触摸滑动支持
       let startX = 0;
       overlay.addEventListener('touchstart', (e) => {
         startX = e.touches[0].clientX; // 记录触摸起始位置
@@ -896,7 +889,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (diffX < -50) showNextImage(); // 左滑→下一张
       });
 
-      // 新增：PC端键盘方向键控制
+      // PC端键盘方向键控制
       function handleKeyDown(e) {
         if (e.key === 'ArrowLeft') showPrevImage(); // 左箭头→上一张
         if (e.key === 'ArrowRight') showNextImage(); // 右箭头→下一张
@@ -993,14 +986,14 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     });
   }
-  // 原有：PWA Service Worker 注册（保留）
+  // PWA Service Worker 注册
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js')
       .then(registration => console.log('Service Worker 注册成功:', registration.scope))
       .catch(err => console.log('Service Worker 注册失败:', err));
   }
 
-  // 原有：全局音量同步函数（保留）
+  // 全局音量同步函数
   window.syncGlobalVolume = function(volume) {
     if (window.globalAudioElements) {
       window.globalAudioElements.forEach(audio => {
@@ -1019,7 +1012,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // 原有：全局声音开关函数（保留）
+  // 全局声音开关函数
   window.toggleGlobalSound = function() {
     window.isGlobalSoundOn = !window.isGlobalSoundOn;
     if (globalSoundBtn) {
@@ -1049,7 +1042,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // 原有：PWA安装按钮逻辑（保留）
+  // PWA安装按钮逻辑
   const installBtn = document.getElementById('install-btn');
   let deferredPrompt;
   const isEdge = /Edg/i.test(navigator.userAgent);
@@ -1075,7 +1068,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 原有：绑定全局控制按钮事件（保留）
+  // 绑定全局控制按钮事件
   if (globalSoundBtn) {
     globalSoundBtn.addEventListener('click', window.toggleGlobalSound);
   }
@@ -1089,11 +1082,11 @@ document.addEventListener('DOMContentLoaded', () => {
 }); // DOMContentLoaded 结束
 </script>
 <script>
-// 原有：YouTube Player API 初始化相关变量（新增全局挂载）
+// YouTube Player API 初始化相关变量
 window.livePlayer;
 window.soundOn = false;
 
-// 原有：onYouTubeIframeAPIReady函数（新增主播放器加入全局控制）
+// onYouTubeIframeAPIReady函数
 function onYouTubeIframeAPIReady() {
   const latestLiveID = 'fN9uYWCjQaw';
   window.livePlayer = new YT.Player('live-player', {
@@ -1115,7 +1108,7 @@ function onYouTubeIframeAPIReady() {
   });
 }
 
-// 原有：右下角声音开关按钮（保留原逻辑，与全局控制联动）
+// 右下角声音开关按钮
 const soundBtn = document.getElementById('sound-toggle-btn');
 soundBtn.addEventListener('click', () => {
   if (!window.livePlayer) return;
@@ -1147,7 +1140,7 @@ soundBtn.addEventListener('click', () => {
   }
 });
 
-// 原有：白天/夜晚模式切换按钮（保留原逻辑，无修改）
+// 白天/夜晚模式切换按钮
 const modeBtn = document.getElementById('mode-toggle-btn');
 const currentMode = localStorage.getItem('theme') || 'light'; // 默认使用 'light' 模式
 if (currentMode === 'dark') {
