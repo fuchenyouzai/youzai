@@ -291,9 +291,9 @@ a.admin-btn:hover { background-color: #b71c1c; }
       if (msg.role === "user") {
         msgDiv.style = "max-width:75%; margin-left:auto; padding:10px 15px; border-radius:12px 12px 0 12px; background:#0088cc; color:#fff; font-size:14px; margin-bottom:8px;";
         msgDiv.innerHTML = `<small>你 · ${formatTime(msg.time)}</small><br>${escapeHtml(msg.content)}`;
-      } else if (msg.role === "bot") {
+      } else if (msg.role === "悠哉") {
         msgDiv.style = "max-width:75%; margin-right:auto; padding:10px 15px; border-radius:12px 12px 12px 0; background:#e0e0e0; color:#333; font-size:14px; margin-bottom:8px;";
-        msgDiv.innerHTML = `<small>Bot · ${formatTime(msg.time)}</small><br>${escapeHtml(msg.content)}`;
+        msgDiv.innerHTML = `<small>悠哉 · ${formatTime(msg.time)}</small><br>${escapeHtml(msg.content)}`;
       }
       messageContainer.appendChild(msgDiv);
     });
@@ -447,6 +447,7 @@ a.admin-btn:hover { background-color: #b71c1c; }
   window.addEventListener("DOMContentLoaded", renderMessages);
   window.addEventListener("beforeunload", stopRefreshTimer); // 页面关闭才停止
 </script>
+
 
 
 
