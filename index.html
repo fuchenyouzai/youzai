@@ -752,7 +752,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ------------------------------
-  // 工具函数（已修改formatTime，确保显示中国东八区时间）
+  // 工具函数（关键修复：强制UTC+8计算，不受浏览器时区影响）
   // ------------------------------
   function startRefreshTimer() {
     stopRefreshTimer(); // 避免重复定时器
@@ -764,13 +764,40 @@ document.addEventListener('DOMContentLoaded', () => {
     if (refreshTimer) clearInterval(refreshTimer);
   }
 
-  // 核心修改：给原始时间戳叠加8小时（UTC+8），强制转为中国时间
+  // 最终修复版：基于UTC时间计算，直接加8小时，彻底规避时区问题
   function formatTime(timestamp) {
-    const d = new Date(timestamp);
-    // 计算中国东八区时间：原始时间 + 8小时（8*60*60*1000毫秒）
-    const chinaTime = new Date(d.getTime() + 8 * 60 * 60 * 1000);
-    // 格式化日期时间，补零确保格式统一（如 2024-05-01 14:05）
-    return `${chinaTime.getFullYear()}-${(chinaTime.getMonth()+1).toString().padStart(2,0)}-${chinaTime.getDate().toString().padStart(2,0)} ${chinaTime.getHours().toString().padStart(2,0)}:${chinaTime.getMinutes().toString().padStart(2,0)}`;
+    // 1. 基于时间戳创建UTC时间对象
+    const utcDate = new Date(timestamp);
+    // 2. 直接获取UTC时间的年/月/日/时/分，再叠加8小时（东八区）
+    let year = utcDate.getUTCFullYear();
+    let month = utcDate.getUTCMonth() + 1; // UTC月份0-11，需+1
+    let day = utcDate.getUTCDate();
+    let hours = utcDate.getUTCHours() + 8; // 核心：UTC时+8=东八区时
+    
+    // 3. 处理跨天情况（如UTC 23时+8=次日7时）
+    if (hours >= 24) {
+      hours -= 24;
+      day += 1;
+      // 4. 简单处理跨月（如31日+1=32日，需修正为下月1日，覆盖99%场景）
+      const monthDays = new Date(year, month, 0).getDate(); // 获取当月总天数
+      if (day > monthDays) {
+        day = 1;
+        month += 1;
+        if (month > 12) {
+          month = 1;
+          year += 1;
+        }
+      }
+    }
+
+    // 5. 补零格式化（确保两位数）
+    month = month.toString().padStart(2, '0');
+    day = day.toString().padStart(2, '0');
+    hours = hours.toString().padStart(2, '0');
+    const minutes = utcDate.getUTCMinutes().toString().padStart(2, '0');
+
+    // 6. 返回中国东八区时间字符串
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
   }
 
   function escapeHtml(unsafe) {
