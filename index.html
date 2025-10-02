@@ -1,4 +1,4 @@
-,<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -201,7 +201,7 @@ a.admin-btn:hover { background-color: #b71c1c; }
 <main>
 
 <!-- 悠哉的Telegram独立模块 -->
-<article style="background: #fff; margin-bottom: 20px; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 200px; width: 100%; box-sizing: border-box;">
+<article style="background: #fff; margin-bottom: 20px; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 1200px; width: 100%; box-sizing: border-box;">
   <h2 style="color: #4CAF50; margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 8px;">悠哉的Telegram</h2>
   <a 
     href="https://t.me/fuchenyouzaibot" 
@@ -291,7 +291,7 @@ a.admin-btn:hover { background-color: #b71c1c; }
       if (msg.role === "user") {
         msgDiv.style = "max-width:75%; margin-left:auto; padding:10px 15px; border-radius:12px 12px 0 12px; background:#0088cc; color:#fff; font-size:14px; margin-bottom:8px;";
         msgDiv.innerHTML = `<small>你 · ${formatTime(msg.time)}</small><br>${escapeHtml(msg.content)}`;
-      } else if (msg.role === "悠哉") {
+      } else if (msg.role === "bot") {
         msgDiv.style = "max-width:75%; margin-right:auto; padding:10px 15px; border-radius:12px 12px 12px 0; background:#e0e0e0; color:#333; font-size:14px; margin-bottom:8px;";
         msgDiv.innerHTML = `<small>悠哉 · ${formatTime(msg.time)}</small><br>${escapeHtml(msg.content)}`;
       }
@@ -447,8 +447,6 @@ a.admin-btn:hover { background-color: #b71c1c; }
   window.addEventListener("DOMContentLoaded", renderMessages);
   window.addEventListener("beforeunload", stopRefreshTimer); // 页面关闭才停止
 </script>
-
-
 
 
 
