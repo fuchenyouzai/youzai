@@ -752,7 +752,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ------------------------------
-  // 工具函数（无修改）
+  // 工具函数（已修改formatTime，确保显示中国东八区时间）
   // ------------------------------
   function startRefreshTimer() {
     stopRefreshTimer(); // 避免重复定时器
@@ -764,9 +764,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (refreshTimer) clearInterval(refreshTimer);
   }
 
+  // 核心修改：给原始时间戳叠加8小时（UTC+8），强制转为中国时间
   function formatTime(timestamp) {
     const d = new Date(timestamp);
-    return `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,0)}-${d.getDate().toString().padStart(2,0)} ${d.getHours().toString().padStart(2,0)}:${d.getMinutes().toString().padStart(2,0)}`;
+    // 计算中国东八区时间：原始时间 + 8小时（8*60*60*1000毫秒）
+    const chinaTime = new Date(d.getTime() + 8 * 60 * 60 * 1000);
+    // 格式化日期时间，补零确保格式统一（如 2024-05-01 14:05）
+    return `${chinaTime.getFullYear()}-${(chinaTime.getMonth()+1).toString().padStart(2,0)}-${chinaTime.getDate().toString().padStart(2,0)} ${chinaTime.getHours().toString().padStart(2,0)}:${chinaTime.getMinutes().toString().padStart(2,0)}`;
   }
 
   function escapeHtml(unsafe) {
@@ -794,6 +798,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener("DOMContentLoaded", renderMessages);
   window.addEventListener("beforeunload", stopRefreshTimer); // 页面关闭才停止
 </script>
+
 
 
 </main>
